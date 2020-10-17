@@ -1,0 +1,59 @@
+{% extends "./_base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<ul class="list-group">
+				{% for item in item_list %}
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-3">
+							<p>名前</p>
+						</div>
+						<div class="col-9">
+							<p>{{ item.name }}</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<p>年齢</p>
+						</div>
+						<div class="col-9">
+							<p>{{ item.age }}</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<p>性別</p>
+						</div>
+						<div class="col-9">
+							<p>{{ item.get_sex_display }}</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<p>登録日</p>
+						</div>
+						<div class="col-9">
+							<p>{{item.created_at|date:"Y/m/d G:i:s"}}</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="float-right">
+								<a class="btn btn-outline-secondary " href="{% url 'update' item.pk %}">編集</a>
+							</div>
+						</div>
+					</div>
+				</li>
+				{% empty %}
+				<li class="list-group-item">
+					対象のデータがありません
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}

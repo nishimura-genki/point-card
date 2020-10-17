@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-from pathlib import Path
 
 import environ
 
@@ -22,7 +21,6 @@ env = environ.Env()
 
 if env.bool('DJANGO_READ_ENV_FILE', default=False):
     env.read_env(str(BASE_DIR.path('.env')))
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms'
+    'app'
 ]
 
 MIDDLEWARE = [
@@ -66,7 +66,14 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -117,3 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_URL = 'admin:login'
+LOGOUT_REDIRECT_URL = '/'
