@@ -1,0 +1,27 @@
+{% extends "registration/base.html" %}
+
+{% block content %}
+
+<table class="table borderless">
+    <tbody>
+        <tr>
+            <th scope="row">sex</th>
+            <td>{{ user.sex }}</td>
+        </tr>
+        <tr>
+            <th scope="row">age</th>
+            <td>{{ user.age }}</td>
+        </tr>
+        <tr>
+            <th scope="row">E-mail</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">入会日</th>
+            <td>{{ user.date_joined }}</td>
+        </tr>
+    </tbody>
+    <a class="btn btn-outline-primary btn-sm" href="#">変更</a>
+</table>
+
+{% endblock %}
