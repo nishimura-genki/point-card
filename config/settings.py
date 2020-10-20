@@ -19,7 +19,7 @@ BASE_DIR = environ.Path(__file__) - 2
 env = environ.Env()
 
 
-if env.bool('DJANGO_READ_ENV_FILE', default=False):
+if env.bool('DJANGO_READ_ENV_FILE', default=True):
     env.read_env(str(BASE_DIR.path('.env')))
 
 
@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap4'
-    'account'
+    'bootstrap4',
+    'account',
 ]
 
 MIDDLEWARE = [

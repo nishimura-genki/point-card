@@ -1,2 +1,3 @@
 django
 django-environ
+django-bootstrap4
