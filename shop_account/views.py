@@ -1,21 +1,15 @@
-from django.urls import reverse_lazy
-from django.views import generic
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import (
-    get_user_model, logout as auth_logout,
-)
+from django.contrib.auth import (get_user_model, logout as auth_logout,)
+from django.views import generic
 from .forms import UserCreateForm
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 User = get_user_model()
 
 
-class Top(generic.TemplateView):
-    template_name = 'top.html'
-
-
-class User_Top(generic.TemplateView):
-    template_name = 'user_top.html'
+class Shopper_Top(generic.TemplateView):
+    template_name = 'shopper_top.html'
 
 
 class SignUpView(generic.CreateView):

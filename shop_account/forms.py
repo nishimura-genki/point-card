@@ -9,9 +9,9 @@ class UserCreateForm(UserCreationForm):
     class Meta:
         model = User
         if User.USERNAME_FIELD == 'email':
-            fields = ('email', 'gender', 'age')
+            fields = ('email',)
         else:
-            fields = ('username', 'email', 'gender', 'age')
+            fields = ('username', 'email',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

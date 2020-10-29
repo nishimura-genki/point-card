@@ -3,23 +3,24 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class UserManager(UserManager):
-    def _create_user(self, email, sex, age, password, **extra_fields):
+    def _create_user(self, email, gender, age, password, **extra_fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, sex=sex,
+        user = self.model(email=email, gender=gender,
                           age=age, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, sex, age, password=None, **extra_fields):
+    def create_user(self, email, gender, age, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)  # 管理者権限なし
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, sex, age, password, **extra_fields)
+        return self._create_user(email, gender, age, password, **extra_fields)
 
-    def create_superuser(self, email, sex, age, password, **extra_fields):
+    def create_superuser(self, email, gender, age, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)  # 管理者権限あり
         extra_fields.setdefault('is_superuser', True)
 
@@ -28,20 +29,21 @@ class UserManager(UserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, sex, age, password, **extra_fields)
+        return self._create_user(email, gender, age, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    SEX_CHOICES = (
-        ('man', '男性'),
-        ('woman', '女性'),
-        ('other', 'その他'),
+    GENDER_CHOICES = (
+        (1, '男性'),
+        (2, '女性'),
+        (3, 'その他'),
     )
 
     email = models.EmailField(_('email address'), unique=True)
-    sex = models.IntegerField(_(' sex '), choices=SEX_CHOICES,
-                              null=True, blank=True)
-    age = models.IntegerField(_(' age '), null=True, blank=True, unique=True)
+    gender = models.IntegerField(_('gender'), choices=GENDER_CHOICES,
+                                 null=True, blank=True)
+    age = models.IntegerField(_('age'), null=True, blank=True, unique=True,
+                              validators=[MinValueValidator(1), MaxValueValidator(100)])
 
     is_staff = models.BooleanField(
         _('staff status'),
@@ -62,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['gender', 'age']
 
     class Meta:
         verbose_name = _('user')
