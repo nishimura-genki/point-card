@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Test</title>
+    <style>
+        canvas,
+        video {
+            border: 1px solid gray;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>QRコードテスト</h1>
+
+    <video id="camera" width="300" height="200"></video>
+    <canvas id="picture" width="300" height="200" hidden></canvas>
+    <p id="output" hidden></p>
+
+
+</body>
+{% load static %}
+<script src="{% static 'qrcode/js/jsQR.js' %}"></script>
+<script src="{% static 'qrcode/js/readqr.js' %}"></script>
+
+</html>

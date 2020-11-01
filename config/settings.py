@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     'account',
-    'take_pic',
+    'qrcode',
 ]
 
 MIDDLEWARE = [
