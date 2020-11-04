@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     gender = models.IntegerField(_('gender'), choices=GENDER_CHOICES,
                                  null=True, blank=True)
-    age = models.IntegerField(_('age'), null=True, blank=True, unique=True,
+    age = models.IntegerField(_('age'), null=True, blank=True,
                               validators=[MinValueValidator(1), MaxValueValidator(100)])
 
     is_staff = models.BooleanField(
