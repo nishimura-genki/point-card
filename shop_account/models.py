@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin, Group, Permission
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.utils import timezone
@@ -14,13 +14,16 @@ class ShopperManager(UserManager):
         return user
 
     def create_user(self, email, password=None, **extra_fields):
-        extra_fields.serdefault('is_staff', False)  # 管理権限なし
+        extra_fields.setdefault('is_staff', False)  # 管理権限なし
         extra_fields.setdefault('is_superuser', False)
         return self._create_shopper(email, password, **extra_fields)
 
 
 class Shopper(AbstractBaseUser, PermissionsMixin):
 
+    groups = models.ManyToManyField(Group, related_name='shopper_set')
+    user_permissions = models.ManyToManyField(
+        Permission, related_name='shopper_set')
     email = models.EmailField(_('email address'), unique=True)
 
     is_staff = models.BooleanField(
