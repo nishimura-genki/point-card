@@ -1,5 +1,7 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from .models import Customer, Shop
 
 User = get_user_model()
 
@@ -9,9 +11,31 @@ class UserCreateForm(UserCreationForm):
     class Meta:
         model = User
         if User.USERNAME_FIELD == 'email':
-            fields = ('email', 'gender', 'age')
+            fields = ('email',)
         else:
-            fields = ('username', 'email', 'gender', 'age')
+            fields = ('username', 'email',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class CustomerCreateForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ('first_name', 'last_name', 'gender', 'age')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class ShopCreateForm(forms.ModelForm):
+    class Meta:
+        model = Shop
+        fields = ('shop_name',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

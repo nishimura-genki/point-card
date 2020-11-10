@@ -16,15 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from account.views import User_Top, Top
-from shop_account.views import Shopper_Top
+
 
 urlpatterns = [
     path('', Top.as_view(), name='top'),
     path('user_top/', User_Top.as_view(), name='user_top'),
-    path('shopper_top/', Shopper_Top.as_view(), name='shopper_top'),
     path('admin/', admin.site.urls),
     path('accounts/', include('account.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('shop_accounts/', include('shop_account.urls')),
-    path('shop_accounts/', include('django.contrib.auth.urls')),
 ]

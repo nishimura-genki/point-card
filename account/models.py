@@ -33,22 +33,16 @@ class UserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    GENDER_CHOICES = (
-        (1, '男性'),
-        (2, '女性'),
-        (3, 'その他'),
-    )
+    is_customer = models.BooleanField(default=False)
+    is_shop = models.BooleanField(default=False)
 
     email = models.EmailField(_('email address'), unique=True)
-    gender = models.IntegerField(_('gender'), choices=GENDER_CHOICES,
-                                 null=True, blank=True)
-    age = models.IntegerField(_('age'), null=True, blank=True,
-                              validators=[MinValueValidator(1), MaxValueValidator(100)])
 
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
+        help_text=_(
+            'Designates whether the user can log into this admin site.'),
     )
     is_active = models.BooleanField(
         _('active'),
@@ -64,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['gender', 'age']
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _('user')
@@ -77,3 +71,36 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, verbose_name=_(
+        "user"), on_delete=models.CASCADE, primary_key=True)
+
+    class Meta:
+        abstract = True
+
+
+class Customer(Profile):
+
+    first_name = models.CharField(_('first name'), max_length=150)
+    last_name = models.CharField(_('last name'), max_length=150)
+    GENDER_CHOICES = (
+        (1, '男性'),
+        (2, '女性'),
+        (3, 'その他'),
+    )
+    gender = models.IntegerField(_('gender'), choices=GENDER_CHOICES,
+                                 null=True, blank=True)
+    age = models.IntegerField(_('age'), null=True, blank=True,
+                              validators=[MinValueValidator(1), MaxValueValidator(100)])
+
+    def __str__(self):
+        return str(self.first_name) + ' ' + str(self.last_name)
+
+
+class Shop(Profile):
+    shop_name = models.CharField(_('shop name'), max_length=150)
+
+    def __str__(self):
+        return str(shop_name)
