@@ -13,4 +13,5 @@ urlpatterns = [
     path('delete_confirm', views.DeleteView.as_view(), name='delete-confirmation'),
     path('delete_complete', TemplateView.as_view(
         template_name="registration/delete_complete.html"), name='delete-complete'),
+    path('pointcard_list/', views.PointCardListView.as_view(), name='pointcard_list'),
 ]

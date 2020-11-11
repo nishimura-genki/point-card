@@ -7,20 +7,19 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class UserManager(UserManager):
-    def _create_user(self, email, gender, age, password, **extra_fields):
+    def _create_user(self, email, password, **extra_fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, gender=gender,
-                          age=age, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, gender, age, password=None, **extra_fields):
+    def create_user(self, email,  password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)  # 管理者権限なし
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, gender, age, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, email, gender, age, password, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)  # 管理者権限あり
         extra_fields.setdefault('is_superuser', True)
 
@@ -29,7 +28,7 @@ class UserManager(UserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, gender, age, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -103,4 +102,23 @@ class Shop(Profile):
     shop_name = models.CharField(_('shop name'), max_length=150)
 
     def __str__(self):
-        return str(shop_name)
+        return str(self.shop_name)
+
+
+class PointCard(models.Model):
+    customer = models.ForeignKey("account.Customer", verbose_name=_(
+        "customer"), on_delete=models.CASCADE)
+    shop = models.ForeignKey("account.Shop", verbose_name=_(
+        "shop"), on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'point card'
+        verbose_name_plural = 'point cards'
+
+
+class NumericalPointCard(PointCard):
+    point = models.IntegerField(verbose_name=_('point'))
+
+
+class StampPointCard(PointCard):
+    num_of_stamps = models.IntegerField(verbose_name=_('number of stamps'))

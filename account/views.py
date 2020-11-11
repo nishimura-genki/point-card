@@ -3,12 +3,12 @@ from django.views import generic
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.edit import DeletionMixin
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
 from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm
-from .models import Profile, Customer, Shop
+from .models import Profile, Customer, Shop, PointCard
 from django.shortcuts import redirect
 
 User = get_user_model()
@@ -72,7 +72,7 @@ class ShopSignUpView(generic.TemplateView):
             user = user_form.save(commit=False)
             user.is_shop = True
             shop = shop_form.save(commit=False)
-            customer.user = user
+            shop.user = user
             user.save()
             user_form.save_m2m()
             shop.save()
@@ -113,5 +113,18 @@ class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, gener
         return self.render_to_response(context=None)
 
 
+class CustomerRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_customer:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+
+class PointCardListView(LoginRequiredMixin, CustomerRequiredMixin, generic.ListView):
+    template_name = 'pointcard_list.html'
+    model = PointCard
+
+    def get_queryset(self):
+        return super().get_queryset().filter(customer=Customer.objects.get(user=self.request.user))
 
 

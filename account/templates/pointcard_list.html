@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+{% for pointcard in object_list %}
+<p>{{pointcard.shop}}</p>
+{% endfor %}
+
+{% endblock %}
