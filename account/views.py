@@ -1,5 +1,7 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
+from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.edit import DeletionMixin
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import (
@@ -100,11 +102,16 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
         return super().get_context_data(user=user, profile=profile, profile_type=profile_type)
 
 
-class DeleteView(LoginRequiredMixin, generic.View):
+class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
+    template_name = 'delete_confirm.html'
+    success_url = reverse_lazy('accounts:delete-complete')
 
-    def get(self, *args, **kwargs):
-        user = User.objects.get(email=self.request.user.email)
-        user.is_active = True
-        user.save()
-        auth_logout(self.request)
-        return render(self.request, 'registration/delete_complete.html')
+    def get_object(self):
+        return self.request.user
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response(context=None)
+
+
+
+
