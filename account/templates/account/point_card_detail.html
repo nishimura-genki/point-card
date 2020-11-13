@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block body %}
+<p>{{type}}</p>
+<table>
+<tbody>
+<tr>
+    <th>店舗名</th>
+    <td>{{object.shop}}</td>
+</tr>
+{% if object.has_point %}
+<tr>
+    <th>ポイント</th>
+    <td>{{object.point}}</td>
+</tr>
+{% endif %}
+{% if object.has_stamp %}
+<tr>
+    <th>スタンプ数</th>
+    <td>{{object.number_of_stamps}}</td>
+</tr>
+{% endif %}
+</tbody>
+</table>
+{% endblock body %}

@@ -115,16 +115,32 @@ class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, gener
 
 class CustomerRequiredMixin(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission
         if not request.user.is_customer:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
 
-class PointCardListView(LoginRequiredMixin, CustomerRequiredMixin, generic.ListView):
-    template_name = 'pointcard_list.html'
+class PointCardListView(CustomerRequiredMixin, generic.ListView):
+    template_name = 'account/point_card_list.html'
     model = PointCard
 
     def get_queryset(self):
         return super().get_queryset().filter(customer=Customer.objects.get(user=self.request.user))
 
 
+class CustomerOfObjectRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not request.user.is_customer:
+            return self.handle_no_permission()
+        if not self.get_object().customer == request.user.customer:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+
+class PointCardDetailView(CustomerOfObjectRequiredMixin, generic.DetailView):
+    model = PointCard
+    template_name = 'account/point_card_detail.html'

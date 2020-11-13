@@ -3,7 +3,7 @@
 {% block body %}
 
 {% for pointcard in object_list %}
-<p>{{pointcard.shop}}</p>
+<p><a href="{% url 'accounts:point_card_detail' pointcard.pk %}">{{pointcard.shop}}</a></p>
 {% endfor %}
 
 {% endblock %}

@@ -4,11 +4,13 @@
 
 {% block content %}
 
-    <h5 class="card-title text-center">入会</h5>
+    {% comment %} <h5 class="card-title text-center">入会</h5>
     <form action="" method="POST">
         {% bootstrap_form form layout='' %}
         <button type="submit" class="btn btn-primary btn-block">入会</button>
         {% csrf_token %}
-    </form>
-
+    </form> {% endcomment %}
+    <h5>入会</h5>
+    <a href="{% url 'accounts:customer_signup' %}">客</a>
+    <a href="{% url 'accounts:shop_signup' %}">店舗</a>
 {% endblock %}

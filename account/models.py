@@ -110,15 +110,11 @@ class PointCard(models.Model):
         "customer"), on_delete=models.CASCADE)
     shop = models.ForeignKey("account.Shop", verbose_name=_(
         "shop"), on_delete=models.CASCADE)
+    has_point = models.BooleanField(default=False)
+    has_stamp = models.BooleanField(default=False)
+    point = models.IntegerField(blank=True, null=True)
+    number_of_stamps = models.IntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'point card'
         verbose_name_plural = 'point cards'
-
-
-class NumericalPointCard(PointCard):
-    point = models.IntegerField(verbose_name=_('point'))
-
-
-class StampPointCard(PointCard):
-    num_of_stamps = models.IntegerField(verbose_name=_('number of stamps'))
