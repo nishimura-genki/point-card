@@ -13,8 +13,9 @@ urlpatterns = [
     path('delete_confirm', views.DeleteView.as_view(), name='delete-confirmation'),
     path('delete_complete', TemplateView.as_view(
         template_name="registration/delete_complete.html"), name='delete-complete'),
-    path('point_card_list/', views.PointCardListView.as_view(),
+     path('point_card_list/', views.PointCardListView.as_view(),
          name='point_card_list'),
-    path('point_card_detail/<int:pk>/',
-         views.PointCardDetailView.as_view(), name='point_card_detail')
+     path('point_card_detail/<int:pk>/',
+          views.PointCardDetailView.as_view(), name='point_card_detail'),
+    path('qrcode/', TemplateView.as_view(template_name='account/qrcode.html'), name='qrcode'),
 ]

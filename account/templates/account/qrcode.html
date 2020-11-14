@@ -1,0 +1,14 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script> 
+<script> 
+    $(function(){
+      var qrtext = '{{ data }}'
+      $("#img-qr").html("");
+      $("#img-qr").qrcode({width:160,height:160,text:qrtext}); 
+    });
+    </script>
+</head>
+<body>
+<div id="img-qr"></div>
+</body>
+

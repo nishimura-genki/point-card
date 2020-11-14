@@ -144,3 +144,10 @@ class CustomerOfObjectRequiredMixin(AccessMixin):
 class PointCardDetailView(CustomerOfObjectRequiredMixin, generic.DetailView):
     model = PointCard
     template_name = 'account/point_card_detail.html'
+
+
+class QRCodeView(LoginRequiredMixin, generic.TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["data"] = 'www.google.com'  # self.request.user.pk
+        return context
