@@ -16,5 +16,9 @@ urlpatterns = [
     path('point_card_list/', views.PointCardListView.as_view(),
          name='point_card_list'),
     path('point_card_detail/<int:pk>/',
-         views.PointCardDetailView.as_view(), name='point_card_detail')
+         views.PointCardDetailView.as_view(), name='point_card_detail'),
+
+    path('make_point_card_form/',TemplateView.as_view(template_name='registration/make_point_card_form.html'),name='make-point-card-form'),
+
+    path('make_point_card/',views.MakePointCardView.as_view(),name='make-point-card'),
 ]
