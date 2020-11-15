@@ -17,5 +17,5 @@ urlpatterns = [
          name='point_card_list'),
      path('point_card_detail/<int:pk>/',
           views.PointCardDetailView.as_view(), name='point_card_detail'),
-    path('qrcode/', TemplateView.as_view(template_name='account/qrcode.html'), name='qrcode'),
+    path('qrcode/', views.QRCodeView.as_view(), name='qrcode'),
 ]

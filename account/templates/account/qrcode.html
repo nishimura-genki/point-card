@@ -3,12 +3,14 @@
 <script> 
     $(function(){
       var qrtext = '{{ data }}'
+      console.log(qrtext);
       $("#img-qr").html("");
-      $("#img-qr").qrcode({width:160,height:160,text:qrtext}); 
+      $("#img-qr").qrcode({width:160,height:160, text:qrtext}); 
     });
     </script>
 </head>
 <body>
-<div id="img-qr"></div>
+<p></p>
+<div id="img-qr" style="object-fit:cover;"></div>
 </body>
 
