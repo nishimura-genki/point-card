@@ -2,15 +2,13 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.edit import DeletionMixin
-from django.shortcuts import render
+from django.shortcuts import render, resolve_url, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
-from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm
 from .models import Profile, Customer, Shop, PointCard
-from django.shortcuts import redirect
-
+from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm
 User = get_user_model()
 
 
@@ -18,19 +16,17 @@ class Top(generic.TemplateView):
     template_name = 'top.html'
 
 
-class User_Top(generic.TemplateView):
-    template_name = 'user_top.html'
+class Customer_Top(generic.TemplateView):
+    template_name = 'customer_top.html'
 
 
-class SignUpView(generic.CreateView):
-    form_class = UserCreateForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/signup.html'
+class Shop_Top(generic.TemplateView):
+    template_name = 'shop_top.html'
 
 
 class CustomerSignUpView(generic.TemplateView):
-    template_name = 'registration/customer_signup.html'
-    success_url = 'top'
+    template_name = 'registration/signup_form.html'
+    success_url = 'customer_top'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -56,8 +52,8 @@ class CustomerSignUpView(generic.TemplateView):
 
 
 class ShopSignUpView(generic.TemplateView):
-    template_name = 'registration/shop_signup.html'
-    success_url = 'top'
+    template_name = 'registration/signup_form.html'
+    success_url = 'shop_top'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -72,7 +68,7 @@ class ShopSignUpView(generic.TemplateView):
             user = user_form.save(commit=False)
             user.is_shop = True
             shop = shop_form.save(commit=False)
-            shop.user = user
+            customer.user = user
             user.save()
             user_form.save_m2m()
             shop.save()
@@ -100,6 +96,21 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
             profile_type = 'unknown'
             profile = None
         return super().get_context_data(user=user, profile=profile, profile_type=profile_type)
+
+
+class CustomerProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
+    model = Customer
+    form_class = CustomerProfileUpDateForm
+    template_name = 'register/customer_form.html'
+
+    def get_success_url(self):
+        return resolve_url('register:customer_profile', pk=self.kwargs['pk'])
+
+
+class ShopProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
+    model = Shop
+    form_class = ShopProfileUpDateForm
+    template_name = 'register/shop_form.html'
 
 
 class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
@@ -148,6 +159,10 @@ class PointCardDetailView(CustomerOfObjectRequiredMixin, generic.DetailView):
 
 class QRCodeView(CustomerRequiredMixin, generic.TemplateView):
     template_name = 'account/qrcode.html'
+
     def get_context_data(self, **kwargs):
 
         return super().get_context_data(data=self.request.user.customer.pk, **kwargs)
+
+    def get_success_url(self):
+        return resolve_url('register:shop_profile', pk=self.kwargs['pk'])
