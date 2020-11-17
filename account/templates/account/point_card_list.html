@@ -2,8 +2,16 @@
 
 {% block body %}
 
-{% for pointcard in object_list %}
-<p><a href="{% url 'accounts:point_card_detail' pointcard.pk %}">{{pointcard.shop}}</a></p>
-{% endfor %}
-
+<ul class="list-group list-group-flush">
+    <li class="list-group-item"><a href="{% url 'accounts:point_card_list' %}">ポイントカード</a></li>
+    <li class="list-group-item"><a href="{% url 'accounts:profile' %}">プロフィール</a></li>
+    <li class="list-group-item"><a href="{% url 'password_change' %}">パスワードの変更</a></li>
+    <li class="list-group-item"><a href="{% url 'logout' %}">ログアウト</a></li>
+    <li class="list-group-item"><a href="{% url 'accounts:delete-confirmation' %}">退会</a></li>
+</ul>
+{% block content %}
+<li class="pointcard-item">
+    <a href="{% url 'accounts:make-point-card-form' %}">ポイントカード作成</a>
+</li>
+{% endblock %}
 {% endblock %}

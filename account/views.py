@@ -166,3 +166,30 @@ class QRCodeView(CustomerRequiredMixin, generic.TemplateView):
 
     def get_success_url(self):
         return resolve_url('register:shop_profile', pk=self.kwargs['pk'])
+
+
+class MakePointCardView(generic.View):
+    def get(self, request, *args, **kwargs):
+
+        return render(request, 'account/point_card_list.html')
+
+    def post(self, request, *args, **kwargs):
+
+        try:
+            context = {
+                'shop_id': request.POST['shop_id'],
+            }
+            print(context['shop_id'])
+
+            input_shop_id = (int(context['shop_id']))
+
+            '''
+            ここにDB操作
+            '''
+
+            return render(request, 'account/point_card_list.html', context)
+        except(TypeError, ValueError, PointCard.DoesNotExist):
+            print('hoge')
+            return render(request, 'account/point_card_list.html', context)
+
+        return render(request, 'account/point_card_list.html', context)
