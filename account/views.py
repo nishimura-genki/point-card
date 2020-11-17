@@ -193,3 +193,9 @@ class MakePointCardView(generic.View):
             return render(request, 'account/point_card_list.html', context)
 
         return render(request, 'account/point_card_list.html', context)
+
+
+class UsePointView(generic.FormView):
+
+    def form_valid(self, form):
+        pass
