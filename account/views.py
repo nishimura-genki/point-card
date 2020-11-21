@@ -8,7 +8,7 @@ from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
 from .models import Profile, Customer, Shop, PointCard
-from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm
+from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm
 User = get_user_model()
 
 
@@ -214,3 +214,15 @@ class UsePointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormVie
         context["points_point_card_has"] = PointCard.objects.get(
             pk=self.kwargs.get('pk')).point
         return context
+
+
+class AddPointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+    success_url = reverse_lazy('shop_top')
+    form_class = AddPointForm
+    template_name = 'account/add_point.html'
+
+    def form_valid(self, form):
+        point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
+        point_card.point += form.cleaned_data['points_to_add']
+        point_card.save()
+        return super().form_valid(form)

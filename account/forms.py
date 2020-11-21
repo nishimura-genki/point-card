@@ -93,3 +93,7 @@ class UsePointForm(forms.Form):
             raise ValidationError(
                 self.error_messages['not_enough_points'], code='not_enough_points')
         return points_to_use
+
+
+class AddPointForm(forms.Form):
+    points_to_add = forms.IntegerField()
