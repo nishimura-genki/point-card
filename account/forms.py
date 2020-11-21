@@ -82,15 +82,14 @@ class ShopProfileUpDateForm(forms.ModelForm):
 
 
 class UsePointForm(forms.Form):
-    point_card_pk = forms.IntegerField(widget=forms.HiddenInput())
+    points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
     points_to_use = forms.IntegerField()
     error_messages = {'not_enough_points': _('ポイントが足りません')}
 
     def clean_points_to_use(self):
         points_to_use = self.cleaned_data.get("points_to_use")
-        point_card = PointCard.objects.get(
-            pk=self.cleaned_data.get("point_card_pk"))
-        if points_to_use > point_card.point:
+        points_point_card_has = self.cleaned_data.get("points_point_card_has")
+        if points_to_use > points_point_card_has:
             raise ValidationError(
                 self.error_messages['not_enough_points'], code='not_enough_points')
         return points_to_use

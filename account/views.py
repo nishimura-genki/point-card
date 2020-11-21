@@ -196,13 +196,12 @@ class MakePointCardView(generic.View):
 
 
 class UsePointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
-    model = PointCard
     success_url = reverse_lazy("shop_top")
     form_class = UsePointForm
     template_name = 'account/use_point.html'
 
     def get_initial(self):
-        return {'point_card_pk': self.kwargs.get('pk')}
+        return {'points_point_card_has': int(PointCard.objects.get(pk=self.kwargs.get('pk')).point)}
     
     def form_valid(self, form):
         point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
