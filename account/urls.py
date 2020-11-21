@@ -30,4 +30,5 @@ urlpatterns = [
 
     path('make_point_card/', views.MakePointCardView.as_view(),
          name='make-point-card'),
+    path('use_point/<int:pk>/', views.UsePointView.as_view(), name="use_point")
 ]
