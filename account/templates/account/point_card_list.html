@@ -13,5 +13,10 @@
 <li class="pointcard-item">
     <a href="{% url 'accounts:make-point-card-form' %}">ポイントカード作成</a>
 </li>
-{% endblock %}
-{% endblock %}
+
+{% for pointcard in object_list %}
+<p><a href="{% url 'accounts:point_card_detail' pointcard.pk %}">{{pointcard.shop}}</a></p>
+{% endfor %}
+
+{% endblock %} 
+{% endblock %} 

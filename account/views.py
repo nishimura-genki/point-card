@@ -8,7 +8,7 @@ from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
 from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm
-from .models import Profile, Customer, Shop, PointCard
+from .models import Profile, User, Customer, Shop, PointCard
 from django.shortcuts import redirect
 
 User = get_user_model()
@@ -158,18 +158,31 @@ class MakePointCardView(generic.View):
             }
             print(context['shop_id'])
 
-            input_shop_id = (int(context['shop_id']))
-            
+            input_shop = Shop.objects.get(pk=int(context['shop_id']))
+            print(input_shop)
+            """
+            とりあえずQRの中身はShopのpkとしてある
+            """
 
-            '''
-            ここにDB操作
-            '''
+
+            data = PointCard(customer=request.user.customer,shop=input_shop,has_point=True,has_stamp=True,point=0,number_of_stamps=0)
+            """
+            has_point と has_stamp をshopの情報から組み込めるようにする
+            """
+            data.save()
+
+            print(data.shop)
+
 
 
             return render(request, 'account/point_card_list.html', context)
-        except(TypeError,ValueError,PointCard.DoesNotExist):
-            print('hoge')
+        except(TypeError,ValueError,Shop.DoesNotExist,User.DoesNotExist,PointCard.DoesNotExist):
+            print('Error')
             return render(request, 'account/point_card_list.html',context)
+            """
+            ここをエラー用ページにする
+            """
+
 
 
         
