@@ -83,7 +83,7 @@ class ShopProfileUpDateForm(forms.ModelForm):
 
 class UsePointForm(forms.Form):
     points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
-    points_to_use = forms.IntegerField()
+    points_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
     error_messages = {'not_enough_points': _('ポイントが足りません')}
 
     def clean_points_to_use(self):
@@ -96,4 +96,20 @@ class UsePointForm(forms.Form):
 
 
 class AddPointForm(forms.Form):
-    points_to_add = forms.IntegerField()
+    points_to_add = forms.IntegerField(label='付与するポイント数', min_value=0)
+
+
+class CashierForm(forms.Form):
+    points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
+    price = forms.IntegerField(min_value=0, label='お会計額')
+    point_rate = forms.FloatField(min_value=0, label="ポイント率")
+    points_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
+    error_messages = {'not_enough_points': _('ポイントが足りません')}
+
+    def clean_points_to_use(self):
+        points_to_use = self.cleaned_data.get("points_to_use")
+        points_point_card_has = self.cleaned_data.get("points_point_card_has")
+        if points_to_use > points_point_card_has:
+            raise ValidationError(
+                self.error_messages['not_enough_points'], code='not_enough_points')
+        return points_to_use

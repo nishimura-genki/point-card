@@ -8,7 +8,7 @@ from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
 from .models import Profile, Customer, Shop, PointCard
-from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm
+from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm
 User = get_user_model()
 
 
@@ -226,3 +226,36 @@ class AddPointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormVie
         point_card.point += form.cleaned_data['points_to_add']
         point_card.save()
         return super().form_valid(form)
+
+
+class CashierView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+    success_url = reverse_lazy('shop_top')
+    form_class = CashierForm
+    template_name = 'account/cashier.html'
+
+    def get_initial(self):
+        return {'points_point_card_has': int(PointCard.objects.get(pk=self.kwargs.get('pk')).point)}
+
+    def form_valid(self, form):
+        point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
+        point_card.point += form.cleaned_data['price'] * \
+            form.cleaned_data['point_rate']
+        point_card.point -= form.cleaned_data['points_to_use']
+        point_card.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["points_point_card_has"] = PointCard.objects.get(
+            pk=self.kwargs.get('pk')).point
+        return context
+
+
+class ReadQRCodeView(generic.TemplateView):
+    template_name = "account/read_qr_code.html"
+
+
+class ProcessQRCodeView(generic.View):
+    def get(self, request, *args, **kwargs):
+        context = {'data': request.GET['data']}
+        return render(request, 'account/process_qr_code.html', context)

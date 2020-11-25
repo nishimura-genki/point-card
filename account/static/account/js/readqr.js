@@ -23,11 +23,19 @@ window.onload = () => {
         const code = jsQR(imageData.data, canvas.width, canvas.height);
         if (code) {
             drawLine(ctx, code.location);
-            document.getElementById("shop_id").value = code.data;
-            output.style.display = 'block';
             canvas.style.display = 'block';
             video.style.display = 'none';
             video.pause();
+            let form = document.createElement('form');
+            let data = document.createElement('input');
+            form.action = action_url;
+            form.method = 'get';
+            data.value = code.data;
+            data.type = 'hidden';
+            data.name = 'data';
+            form.appendChild(data);
+            document.body.appendChild(form);
+            form.submit();
         } else {
             setTimeout(checkPicture, 300);
         }

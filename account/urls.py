@@ -31,5 +31,9 @@ urlpatterns = [
     path('make_point_card/', views.MakePointCardView.as_view(),
          name='make-point-card'),
     path('use_point/<int:pk>/', views.UsePointView.as_view(), name="use_point"),
-    path('add_point/<int:pk>/', views.AddPointView.as_view(), name="use_point"),
+    path('add_point/<int:pk>/', views.AddPointView.as_view(), name="add_point"),
+    path('cashier/<int:pk>/', views.CashierView.as_view(), name="cashier"),
+    path('read_qr_code/', views.ReadQRCodeView.as_view(), name='read_qr_code'),
+    path('process_qr_code/', views.ProcessQRCodeView.as_view(),
+         name="process_qr_code"),
 ]

@@ -1,0 +1,6 @@
+<p>現在のポイント数: {{points_point_card_has}}</p>
+<form method="POST">
+{% csrf_token %}
+{{form.as_p}}
+<button type="submit">会計</button>
+</form>
