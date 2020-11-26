@@ -178,10 +178,7 @@ class MakePointCardView(generic.View):
             return render(request, 'account/point_card_list.html', context)
         except(TypeError,ValueError,Shop.DoesNotExist,User.DoesNotExist,PointCard.DoesNotExist):
             print('Error')
-            return render(request, 'account/point_card_list.html',context)
-            """
-            ここをエラー用ページにする
-            """
+            return render(request, 'account/make_point_card_fail.html',context) 
 
 
 
