@@ -59,14 +59,7 @@ window.onload = () => {
         .catch((err) => {
             console.log(err.name + ": " + err.message);
         });
-
     
-//csrf_token をどうやってPOSTに含めるのかがわからない
-//流れとしては、cookieからcsrf_tokenを取得→？？？を使ってpostリクエストを作成←これができない
-//cookieからしゅとくするやつができないよん
-    
-   
-
     
 
     function getCookie(name) {
