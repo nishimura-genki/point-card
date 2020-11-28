@@ -1,1 +1,10 @@
-<p>{{data}}</p>
+{% if qr.user_type == 'Customer' %}
+{% if qr.action == None %}
+<a>link for customer</a>
+{% endif %}
+{% endif %}
+{% if qr.user_type == 'Shop' %}
+{% if qr.action == None %}
+<a>link for shop</a>
+{% endif %}
+{% endif %}

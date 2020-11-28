@@ -1,3 +1,4 @@
+from account import qr_code
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.generic.base import TemplateResponseMixin
@@ -161,8 +162,8 @@ class QRCodeView(CustomerRequiredMixin, generic.TemplateView):
     template_name = 'account/qrcode.html'
 
     def get_context_data(self, **kwargs):
-
-        return super().get_context_data(data=self.request.user.customer.pk, **kwargs)
+        qr = qr_code.QRCode.from_user(self.request.user)
+        return super().get_context_data(data=str(qr), **kwargs)
 
     def get_success_url(self):
         return resolve_url('register:shop_profile', pk=self.kwargs['pk'])
@@ -202,7 +203,7 @@ class UsePointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormVie
 
     def get_initial(self):
         return {'points_point_card_has': int(PointCard.objects.get(pk=self.kwargs.get('pk')).point)}
-    
+
     def form_valid(self, form):
         point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
         point_card.point -= form.cleaned_data['points_to_use']
@@ -257,5 +258,7 @@ class ReadQRCodeView(generic.TemplateView):
 
 class ProcessQRCodeView(generic.View):
     def get(self, request, *args, **kwargs):
-        context = {'data': request.GET['data']}
+        data = request.GET['data']
+        qr = qr_code.QRCode.from_str(data)
+        context = {'qr':  qr}
         return render(request, 'account/process_qr_code.html', context)
