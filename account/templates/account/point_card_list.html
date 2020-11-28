@@ -1,17 +1,11 @@
-{% extends "base.html" %}
-
-{% block body %}
-
-<ul class="list-group list-group-flush">
-    <li class="list-group-item"><a href="{% url 'accounts:point_card_list' %}">ポイントカード</a></li>
-    <li class="list-group-item"><a href="{% url 'accounts:profile' %}">プロフィール</a></li>
-    <li class="list-group-item"><a href="{% url 'password_change' %}">パスワードの変更</a></li>
-    <li class="list-group-item"><a href="{% url 'logout' %}">ログアウト</a></li>
-    <li class="list-group-item"><a href="{% url 'accounts:delete-confirmation' %}">退会</a></li>
-</ul>
+{% extends "registration/base.html" %}
 {% block content %}
 <li class="pointcard-item">
     <a href="{% url 'accounts:make-point-card-form' %}">ポイントカード作成</a>
 </li>
-{% endblock %}
+{% for card in object_list %}
+<li class="pointcard-item">
+    <a href="{% url 'accounts:point_card_detail' card.pk %}">{{card.shop}}</a>
+</li>
+{% endfor %}
 {% endblock %}

@@ -21,19 +21,26 @@ class QRCode:
     all_actions = ['cashier', 'add_point', 'make_point_card', ]
 
     def __init__(self, user_type, pk, action=all_actions):
+        #user_type
         if not user_type in {'Customer', 'Shop'}:
             raise InvalidUserTypeError
         self.user_type = user_type
+        #pk
+        try:
+            pk = int(pk)
+        except:
+            raise InvalidPkError
         if not User.objects.filter(pk=pk).exists():
             raise InvalidPkError
-        self.pk = int(pk)
+        self.pk = pk
+        #action
         for a in action:
             if not a in self.all_actions:
                 raise InvalidActionError
         self.action = action
 
     def __str__(self):
-        return ','.join([self.user_type, self.pk, *self.action])
+        return ','.join([self.user_type, str(self.pk), *self.action])
 
     @classmethod
     def from_user(cls, user, action=all_actions):
