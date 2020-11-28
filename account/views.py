@@ -259,6 +259,9 @@ class ReadQRCodeView(generic.TemplateView):
 class ProcessQRCodeView(generic.View):
     def get(self, request, *args, **kwargs):
         data = request.GET['data']
-        qr = qr_code.QRCode.from_str(data)
-        context = {'qr':  qr}
-        return render(request, 'account/process_qr_code.html', context)
+        try:
+            qr = qr_code.QRCode.from_str(data)
+            context = {'qr':  qr}
+            return render(request, 'account/process_qr_code.html', context)
+        except qr_code.QRCodeError:
+            return redirect('accounts:read_qr_code')
