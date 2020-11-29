@@ -33,12 +33,12 @@ class CustomerCreateForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
-    @transaction.atomic
-    def save(self):
-        user = super().save(commit=False)
-        user.is_user = True
-        user.save()
-        return user
+    # @transaction.atomic
+    # def save(self):
+    #     user = super().save(commit=False)
+    #     user.is_user = True
+    #     user.save()
+    #     return user
 
 
 class ShopCreateForm(forms.ModelForm):
@@ -51,12 +51,12 @@ class ShopCreateForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
-    @transaction.atomic
-    def save(self):
-        user = super().save(commit=False)
-        user.is_user = True
-        user.save()
-        return user
+    # @transaction.atomic
+    # def save(self):
+    #     user = super().save(commit=False)
+    #     user.is_user = True
+    #     user.save()
+    #     return user
 
 
 class CustomerProfileUpDateForm(forms.ModelForm):

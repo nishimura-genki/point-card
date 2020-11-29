@@ -26,7 +26,7 @@ class Shop_Top(generic.TemplateView):
 
 
 class CustomerSignUpView(generic.TemplateView):
-    template_name = 'registration/signup_form.html'
+    template_name = 'registration/customer_signup.html'
     success_url = 'customer_top'
 
     def get(self, request, *args, **kwargs):
@@ -53,7 +53,7 @@ class CustomerSignUpView(generic.TemplateView):
 
 
 class ShopSignUpView(generic.TemplateView):
-    template_name = 'registration/signup_form.html'
+    template_name = 'registration/shop_signup.html'
     success_url = 'shop_top'
 
     def get(self, request, *args, **kwargs):
@@ -272,7 +272,7 @@ class ProcessQRCodeView(generic.View):
 class DeletePointCardView(CustomerOfObjectRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
 
     template_name = 'account/delete_point_card_confirm.html'
-    success_url = reverse_lazy('accounts:delete_point_card_complete.html')
+    success_url = reverse_lazy('accounts:delete_point_card_complete')
 
     def get_object(self):
         return PointCard.objects.get(pk=self.kwargs.get('pk'))
