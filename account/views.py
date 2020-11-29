@@ -115,7 +115,7 @@ class ShopProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
 
 
 class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
-    template_name = 'delete_confirm.html'
+    template_name = 'registration/delete_confirm.html'
     success_url = reverse_lazy('accounts:delete-complete')
 
     def get_object(self):
@@ -169,31 +169,33 @@ class QRCodeView(CustomerRequiredMixin, generic.TemplateView):
         return resolve_url('register:shop_profile', pk=self.kwargs['pk'])
 
 
-class MakePointCardView(generic.View):
+class MakePointCardView(CustomerRequiredMixin, generic.View):
+
     def get(self, request, *args, **kwargs):
 
-        return render(request, 'account/point_card_list.html')
-
-    def post(self, request, *args, **kwargs):
-
         try:
-            context = {
-                'shop_id': request.POST['shop_id'],
-            }
-            print(context['shop_id'])
+            # context = {
+            # 'shop_id': request.POST['shop_id'],
+            # }
+            # print(context['shop_id'])
+            shop_user_id = self.kwargs.get('shop_user_id')
+            shop_user = User.objects.get(pk=shop_user_id)
 
-            input_shop_id = (int(context['shop_id']))
+            data = PointCard(customer=request.user.customer, shop=shop_user.shop,
+                             has_point=True, has_stamp=True, point=0, number_of_stamps=0)
+            """
+            has_point と has_stamp をshopの情報から組み込めるようにする
+            """
+            data.save()
 
-            '''
-            ここにDB操作
-            '''
+            print(data.shop)
 
-            return render(request, 'account/point_card_list.html', context)
-        except(TypeError, ValueError, PointCard.DoesNotExist):
-            print('hoge')
-            return render(request, 'account/point_card_list.html', context)
-
-        return render(request, 'account/point_card_list.html', context)
+            return redirect('accounts:point_card_list')
+        except(TypeError, ValueError, Shop.DoesNotExist, User.DoesNotExist, PointCard.DoesNotExist):
+            print('Error')
+            context = {'object_list': PointCard.objects.filter(
+                customer=request.user.customer)}
+            return render(request, 'account/make_point_card_fail.html', context)
 
 
 class UsePointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
@@ -265,3 +267,15 @@ class ProcessQRCodeView(generic.View):
             return render(request, 'account/process_qr_code.html', context)
         except qr_code.QRCodeError:
             return redirect('accounts:read_qr_code')
+
+
+class DeletePointCardView(CustomerOfObjectRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
+
+    template_name = 'account/delete_point_card_confirm.html'
+    success_url = reverse_lazy('accounts:delete_point_card_complete.html')
+
+    def get_object(self):
+        return PointCard.objects.get(pk=self.kwargs.get('pk'))
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response(context=None)

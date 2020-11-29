@@ -25,10 +25,10 @@ urlpatterns = [
          name='customer_profile_update'),
     path('shop_profile_update/', views.ShopProfileUpDateView.as_view(),
          name='shop_profile_update'),
-    path('make_point_card_form/', TemplateView.as_view(
-        template_name='registration/make_point_card_form.html'), name='make-point-card-form'),
+    #path('make_point_card_form/', TemplateView.as_view(
+    #    template_name='registration/make_point_card_form.html'), name='make-point-card-form'),
 
-    path('make_point_card/', views.MakePointCardView.as_view(),
+    path('make_point_card/<int:shop_user_id>', views.MakePointCardView.as_view(),
          name='make-point-card'),
     path('use_point/<int:pk>/', views.UsePointView.as_view(), name="use_point"),
     path('add_point/<int:pk>/', views.AddPointView.as_view(), name="add_point"),
@@ -36,4 +36,6 @@ urlpatterns = [
     path('read_qr_code/', views.ReadQRCodeView.as_view(), name='read_qr_code'),
     path('process_qr_code/', views.ProcessQRCodeView.as_view(),
          name="process_qr_code"),
+    path('point_card/<int:pk>/delete',
+         views.DeletePointCardView.as_view(), name='delete_point_card')
 ]

@@ -1,7 +1,7 @@
 {% extends "registration/base.html" %}
 {% block content %}
 <li class="pointcard-item">
-    <a href="{% url 'accounts:make-point-card-form' %}">ポイントカード作成</a>
+    <a href="{% url 'accounts:read_qr_code' %}">ポイントカード作成</a>
 </li>
 {% for card in object_list %}
 <li class="pointcard-item">

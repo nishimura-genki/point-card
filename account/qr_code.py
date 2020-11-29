@@ -32,6 +32,12 @@ class QRCode:
             raise InvalidPkError
         if not User.objects.filter(pk=pk).exists():
             raise InvalidPkError
+        if user_type == 'Customer':
+            if not User.objects.get(pk=pk).is_customer:
+                raise InvalidPkError
+        else:
+            if not User.objects.get(pk=pk).is_shop:
+                raise InvalidPkError
         self.pk = pk
         #action
         for a in action:

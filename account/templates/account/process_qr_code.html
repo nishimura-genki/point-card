@@ -8,6 +8,6 @@
 {% endif %}
 {% if qr.user_type == 'Shop' %}
 {% if 'make_point_card' in qr.action %}
-<a>link for shop</a>
+<a href="{% url 'accounts:make-point-card' qr.pk %}">このお店のポイントカードを作成</a>
 {% endif %}
 {% endif %}
