@@ -69,7 +69,7 @@ class ShopSignUpView(generic.TemplateView):
             user = user_form.save(commit=False)
             user.is_shop = True
             shop = shop_form.save(commit=False)
-            customer.user = user
+            shop.user = user
             user.save()
             user_form.save_m2m()
             shop.save()
@@ -102,16 +102,23 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
 class CustomerProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
     model = Customer
     form_class = CustomerProfileUpDateForm
-    template_name = 'register/customer_form.html'
+    template_name = 'registration/customer_form.html'
 
     def get_success_url(self):
-        return resolve_url('register:customer_profile', pk=self.kwargs['pk'])
+        return resolve_url('accounts:profile')
+
+    def get_object(self):
+        return self.request.user.customer
 
 
 class ShopProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
     model = Shop
     form_class = ShopProfileUpDateForm
-    template_name = 'register/shop_form.html'
+    template_name = 'registration/shop_form.html'
+    success_url = reverse_lazy('accounts:profile')
+
+    def get_object(self):
+        return self.request.user.shop
 
 
 class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
@@ -172,6 +179,8 @@ class QRCodeView(CustomerRequiredMixin, generic.TemplateView):
 class MakePointCardView(CustomerRequiredMixin, generic.View):
 
     def get(self, request, *args, **kwargs):
+        class PointCardAlreadyExists(Exception):
+            pass
 
         try:
             # context = {
@@ -180,6 +189,8 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
             # print(context['shop_id'])
             shop_user_id = self.kwargs.get('shop_user_id')
             shop_user = User.objects.get(pk=shop_user_id)
+            if PointCard.objects.filter(shop=shop_user.shop, customer=request.user.customer).exists():
+                raise PointCardAlreadyExists
 
             data = PointCard(customer=request.user.customer, shop=shop_user.shop,
                              has_point=True, has_stamp=True, point=0, number_of_stamps=0)
@@ -191,6 +202,10 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
             print(data.shop)
 
             return redirect('accounts:point_card_list')
+        except PointCardAlreadyExists:
+            context ={'object_list': PointCard.objects.filter(
+                customer=request.user.customer), 'message':'このお店のポイントカードは作成済みです'} 
+            return render(request, 'account/make_point_card_fail.html', context)
         except(TypeError, ValueError, Shop.DoesNotExist, User.DoesNotExist, PointCard.DoesNotExist):
             print('Error')
             context = {'object_list': PointCard.objects.filter(

@@ -11,6 +11,7 @@
 </ul>
 {% block content %}
 <h1>失敗しました</h1>
+<p>{{message}}</p>
 <li class="pointcard-item">
     <a href="{% url 'accounts:make-point-card-form' %}">もう一度試す</a>
 </li>

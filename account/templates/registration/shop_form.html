@@ -1,1 +1,8 @@
-profile変更画面のhtml
+{% extends 'registration/base.html' %}
+{% block content %}
+<form method='POST'>
+{% csrf_token %}
+{{form.as_table}}
+<button type='submit' class='btn btn-primary btn-block'>変更</button>
+</form>
+{% endblock content %}
