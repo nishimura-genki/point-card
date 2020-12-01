@@ -1,0 +1,8 @@
+{% extends 'registration/base.html' %}
+{% block content %}
+<form method='post'>
+{% csrf_token %}
+{{form}}
+<button type='submit'>変更</button>
+</form>
+{% endblock content %}

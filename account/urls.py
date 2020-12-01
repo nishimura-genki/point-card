@@ -48,5 +48,6 @@ urlpatterns = [
          views.UseStampView.as_view(), name='use_stamp'),
     path('does_not_have_stamp/', TemplateView.as_view(
         template_name='account/does_not_have_stamp.html'), name='does_not_have_stamp'),
-     
+    path('customize_point_card/', views.CustomizePointCardView.as_view(),
+         name='customize_point_card'),
 ]

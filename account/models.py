@@ -81,16 +81,16 @@ class Profile(models.Model):
 
 class Customer(Profile):
 
-    first_name = models.CharField(_('first name'), max_length=150)
-    last_name = models.CharField(_('last name'), max_length=150)
+    first_name = models.CharField(_('名前'), max_length=150)
+    last_name = models.CharField(_('苗字'), max_length=150)
     GENDER_CHOICES = (
         (1, '男性'),
         (2, '女性'),
         (3, 'その他'),
     )
-    gender = models.IntegerField(_('gender'), choices=GENDER_CHOICES,
+    gender = models.IntegerField(_('性別'), choices=GENDER_CHOICES,
                                  null=True, blank=True)
-    age = models.IntegerField(_('age'), null=True, blank=True,
+    age = models.IntegerField(_('年齢'), null=True, blank=True,
                               validators=[MinValueValidator(1), MaxValueValidator(100)])
 
     def __str__(self):
@@ -98,8 +98,11 @@ class Customer(Profile):
 
 
 class Shop(Profile):
-    shop_name = models.CharField(_('shop name'), max_length=150)
-
+    shop_name = models.CharField(_('店舗名'), max_length=150)
+    has_point = models.BooleanField(
+        _('ポイント機能を使用する'), default=False, help_text='ユーザがポイントカードを作成したときにそのポイントカードがポイントカード機能を使用するか')
+    has_stamp = models.BooleanField(
+        _('スタンプ機能を使用する'), default=False, help_text='ユーザがポイントカードを作成したときにそのポイントカードがポイントカード機能を使用するか')
     def __str__(self):
         return str(self.shop_name)
 

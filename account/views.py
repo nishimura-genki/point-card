@@ -9,8 +9,17 @@ from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
 from .models import Profile, Customer, Shop, PointCard
-from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm, UseStampForm, AddStampForm
+from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm, UseStampForm, AddStampForm, CustomizePointCardForm
 User = get_user_model()
+
+
+class ShopRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not request.user.is_shop:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 
 class Top(generic.TemplateView):
@@ -121,6 +130,16 @@ class ShopProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
         return self.request.user.shop
 
 
+class CustomizePointCardView(ShopRequiredMixin, generic.UpdateView):
+    model = Shop
+    form_class = CustomizePointCardForm
+    template_name = 'account/customize_point_card_form.html'
+    success_url = reverse_lazy('accounts:profile')
+
+    def get_object(self):
+        return self.request.user.shop
+
+
 class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
     template_name = 'registration/delete_confirm.html'
     success_url = reverse_lazy('accounts:delete-complete')
@@ -193,33 +212,21 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
                 raise PointCardAlreadyExists
 
             data = PointCard(customer=request.user.customer, shop=shop_user.shop,
-                             has_point=True, has_stamp=True, point=0, number_of_stamps=0)
-            """
-            has_point と has_stamp をshopの情報から組み込めるようにする
-            """
+                             has_point=shop_user.shop.has_point, has_stamp=shop_user.shop.has_stamp, point=0, number_of_stamps=0)
             data.save()
 
             print(data.shop)
 
             return redirect('accounts:point_card_list')
         except PointCardAlreadyExists:
-            context ={'object_list': PointCard.objects.filter(
-                customer=request.user.customer), 'message':'このお店のポイントカードは作成済みです'} 
+            context = {'object_list': PointCard.objects.filter(
+                customer=request.user.customer), 'message': 'このお店のポイントカードは作成済みです'}
             return render(request, 'account/make_point_card_fail.html', context)
         except(TypeError, ValueError, Shop.DoesNotExist, User.DoesNotExist, PointCard.DoesNotExist):
             print('Error')
             context = {'object_list': PointCard.objects.filter(
                 customer=request.user.customer)}
             return render(request, 'account/make_point_card_fail.html', context)
-
-
-class ShopRequiredMixin(AccessMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        if not request.user.is_shop:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
 
 class PointCardMixin:
@@ -266,7 +273,7 @@ class UsePointView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
             return redirect('accounts:does_not_have_point')
         else:
             return super().get(self, request, *args, **kwargs)
-    
+
 
 class UseStampView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
     success_url = reverse_lazy("shop_top")

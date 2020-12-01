@@ -81,6 +81,17 @@ class ShopProfileUpDateForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
 
+class CustomizePointCardForm(forms.ModelForm):
+    class Meta:
+        model = Shop
+        fields = ('has_point', 'has_stamp',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
 class UsePointForm(forms.Form):
     points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
     points_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
