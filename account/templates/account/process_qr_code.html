@@ -5,6 +5,9 @@
 {% if 'add_point' in qr.action %}
 <a href="{% url 'accounts:add_point' qr.pk %}">ポイントを付与する</a>
 {% endif %}
+{% if 'use_stamp' in qr.action %}
+<a href="{% url 'accounts:use_stamp' qr.pk %}">スタンプを使用する</a>
+{% endif %}
 {% endif %}
 {% if qr.user_type == 'Shop' %}
 {% if 'make_point_card' in qr.action %}

@@ -95,9 +95,26 @@ class UsePointForm(forms.Form):
         return points_to_use
 
 
+class UseStampForm(forms.Form):
+    stamps_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
+    stamps_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
+    error_messages = {'not_enough_stamps': _('スタンプが足りません')}
+
+    def clean_stamps_to_use(self):
+        stamps_to_use = self.cleaned_data.get("stamps_to_use")
+        stamps_point_card_has = self.cleaned_data.get("stamps_point_card_has")
+        if stamps_to_use > stamps_point_card_has:
+            raise ValidationError(
+                self.error_messages['not_enough_stamps'], code='not_enough_stamps')
+        return stamps_to_use
+
+
 class AddPointForm(forms.Form):
     points_to_add = forms.IntegerField(label='付与するポイント数', min_value=0)
 
+
+class AddStampForm(forms.Form):
+    stamps_to_add = forms.IntegerField(label='押すスタンプ数', min_value=0)
 
 class CashierForm(forms.Form):
     points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())

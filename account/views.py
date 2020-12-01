@@ -9,7 +9,7 @@ from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
 from .models import Profile, Customer, Shop, PointCard
-from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm
+from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm, UseStampForm, AddStampForm
 User = get_user_model()
 
 
@@ -222,7 +222,26 @@ class ShopRequiredMixin(AccessMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
-class UsePointView(ShopRequiredMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+class PointCardMixin:
+    """
+    get_point_card(self)
+    urlにUserのpkが含まれている場合にポイントカードを返す
+    ログインされていてis_customerかis_shopが必要
+    urlに含まれるUserとページを開くUserのタイプが異なることが必要
+    """
+
+    def get_point_card(self):
+        if self.request.user.is_customer:
+            customer = self.request.user.customer
+            shop = Shop.objects.get(pk=self.kwargs.get('shop_user_id'))
+        elif self.request.user.is_shop:
+            customer = Customer.objects.get(
+                pk=self.kwargs.get('customer_user_id'))
+            shop = self.request.user.shop
+        return PointCard.objects.get(shop=shop, customer=customer)
+
+
+class UsePointView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
     success_url = reverse_lazy("shop_top")
     form_class = UsePointForm
     template_name = 'account/use_point.html'
@@ -231,47 +250,99 @@ class UsePointView(ShopRequiredMixin, FormMixin, TemplateResponseMixin, generic.
         return {'points_point_card_has': int(PointCard.objects.get(pk=self.kwargs.get('pk')).point)}
 
     def form_valid(self, form):
-        point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
+        point_card = self.get_point_card()
         point_card.point -= form.cleaned_data['points_to_use']
         point_card.save()
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["points_point_card_has"] = PointCard.objects.get(
-            pk=self.kwargs.get('pk')).point
+        context["points_point_card_has"] = self.get_point_card().point
         return context
 
     def get(self, request, *args, **kwargs):
-        point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
+        point_card = self.get_point_card()
+        if not point_card.has_point:
+            return redirect('accounts:does_not_have_point')
+        else:
+            return super().get(self, request, *args, **kwargs)
+    
+
+class UseStampView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+    success_url = reverse_lazy("shop_top")
+    form_class = UseStampForm
+    template_name = 'account/use_stamp.html'
+
+    def get_initial(self):
+        return {'stamps_point_card_has': int(self.get_point_card().number_of_stamps)}
+
+    def form_valid(self, form):
+        point_card = self.get_point_card()
+        point_card.number_of_stamps -= form.cleaned_data['stamps_to_use']
+        point_card.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["stamps_point_card_has"] = self.get_point_card().number_of_stamps
+        return context
+
+    def get(self, request, *args, **kwargs):
+        point_card = self.get_point_card()
+        if not point_card.has_stamp:
+            return redirect('accounts:does_not_have_stamp')
+        else:
+            return super().get(self, request, *args, **kwargs)
+
+
+class AddPointView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+    success_url = reverse_lazy('shop_top')
+    form_class = AddPointForm
+    template_name = 'account/add_point.html'
+
+    def form_valid(self, form):
+        point_card = self.get_point_card()
+        point_card.point += form.cleaned_data['points_to_add']
+        point_card.save()
+        return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        point_card = self.get_point_card()
         if not point_card.has_point:
             return redirect('accounts:does_not_have_point')
         else:
             return super().get(self, request, *args, **kwargs)
 
 
-class AddPointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+class AddStampView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
     success_url = reverse_lazy('shop_top')
-    form_class = AddPointForm
-    template_name = 'account/add_point.html'
+    form_class = AddStampForm
+    template_name = 'account/add_stamp.html'
 
     def form_valid(self, form):
-        point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
-        point_card.point += form.cleaned_data['points_to_add']
+        point_card = self.get_point_card()
+        point_card.number_of_stamps += form.cleaned_data['stamps_to_add']
         point_card.save()
         return super().form_valid(form)
 
+    def get(self, request, *args, **kwargs):
+        point_card = self.get_point_card()
+        if not point_card.has_stamp:
+            return redirect('accounts:does_not_have_stamp')
+        else:
+            return super().get(self, request, *args, **kwargs)
 
-class CashierView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+
+class CashierView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
     success_url = reverse_lazy('shop_top')
     form_class = CashierForm
     template_name = 'account/cashier.html'
 
     def get_initial(self):
-        return {'points_point_card_has': int(PointCard.objects.get(pk=self.kwargs.get('pk')).point)}
+        return {'points_point_card_has': int(self.get_point_card().point)}
 
     def form_valid(self, form):
-        point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
+        point_card = self.get_point_card()
         point_card.point += form.cleaned_data['price'] * \
             form.cleaned_data['point_rate']
         point_card.point -= form.cleaned_data['points_to_use']
@@ -280,8 +351,7 @@ class CashierView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["points_point_card_has"] = PointCard.objects.get(
-            pk=self.kwargs.get('pk')).point
+        context["points_point_card_has"] = self.get_point_card().point
         return context
 
 

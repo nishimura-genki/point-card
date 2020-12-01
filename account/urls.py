@@ -27,9 +27,14 @@ urlpatterns = [
 
     path('make_point_card/<int:shop_user_id>', views.MakePointCardView.as_view(),
          name='make-point-card'),
-    path('use_point/<int:pk>/', views.UsePointView.as_view(), name="use_point"),
-    path('add_point/<int:pk>/', views.AddPointView.as_view(), name="add_point"),
-    path('cashier/<int:pk>/', views.CashierView.as_view(), name="cashier"),
+    path('use_point/<int:customer_user_id>/',
+         views.UsePointView.as_view(), name="use_point"),
+    path('add_point/<int:customer_user_id>/',
+         views.AddPointView.as_view(), name="add_point"),
+    path('add_stamp/<int:customer_user_id>',
+         views.AddStampView.as_view(), name='add_stamp'),
+    path('cashier/<int:customer_user_id>/',
+         views.CashierView.as_view(), name="cashier"),
     path('read_qr_code/', views.ReadQRCodeView.as_view(), name='read_qr_code'),
     path('process_qr_code/', views.ProcessQRCodeView.as_view(),
          name="process_qr_code"),
@@ -39,5 +44,9 @@ urlpatterns = [
         template_name='account/delete_point_card_complete.html'), name="delete_point_card_complete"),
     path("does_not_have_point/", TemplateView.as_view(
         template_name='account/does_not_have_point.html'), name="does_not_have_point"),
-
+    path("use_stamp/<int:customer_user_id>/",
+         views.UseStampView.as_view(), name='use_stamp'),
+    path('does_not_have_stamp/', TemplateView.as_view(
+        template_name='account/does_not_have_stamp.html'), name='does_not_have_stamp'),
+     
 ]
