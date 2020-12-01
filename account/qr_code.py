@@ -18,7 +18,8 @@ class InvalidActionError(QRCodeError):
 
 
 class QRCode:
-    all_actions = ['cashier', 'add_point', 'make_point_card', 'use_stamp']
+    all_actions = ['cashier', 'add_point', 'make_point_card',
+                   'use_stamp', 'use_point', 'add_stamp']
 
     def __init__(self, user_type, pk, action=all_actions):
         #user_type

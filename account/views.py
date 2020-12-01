@@ -184,15 +184,12 @@ class PointCardDetailView(CustomerOfObjectRequiredMixin, generic.DetailView):
     template_name = 'account/point_card_detail.html'
 
 
-class QRCodeView(CustomerRequiredMixin, generic.TemplateView):
+class QRCodeView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'account/qrcode.html'
 
     def get_context_data(self, **kwargs):
         qr = qr_code.QRCode.from_user(self.request.user)
         return super().get_context_data(data=str(qr), **kwargs)
-
-    def get_success_url(self):
-        return resolve_url('register:shop_profile', pk=self.kwargs['pk'])
 
 
 class MakePointCardView(CustomerRequiredMixin, generic.View):
