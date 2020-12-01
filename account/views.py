@@ -213,7 +213,16 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
             return render(request, 'account/make_point_card_fail.html', context)
 
 
-class UsePointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
+class ShopRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not request.user.is_shop:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UsePointView(ShopRequiredMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
     success_url = reverse_lazy("shop_top")
     form_class = UsePointForm
     template_name = 'account/use_point.html'
@@ -232,6 +241,13 @@ class UsePointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormVie
         context["points_point_card_has"] = PointCard.objects.get(
             pk=self.kwargs.get('pk')).point
         return context
+
+    def get(self, request, *args, **kwargs):
+        point_card = PointCard.objects.get(pk=self.kwargs.get('pk'))
+        if not point_card.has_point:
+            return redirect('accounts:does_not_have_point')
+        else:
+            return super().get(self, request, *args, **kwargs)
 
 
 class AddPointView(FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):

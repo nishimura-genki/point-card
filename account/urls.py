@@ -18,7 +18,6 @@ urlpatterns = [
     path('point_card_detail/<int:pk>/',
          views.PointCardDetailView.as_view(), name='point_card_detail'),
     path('qrcode/', views.QRCodeView.as_view(), name='qrcode'),
-    #ここ
     path('customer_profile_update/', views.CustomerProfileUpDateView.as_view(),
          name='customer_profile_update'),
     path('shop_profile_update/', views.ShopProfileUpDateView.as_view(),
@@ -38,4 +37,7 @@ urlpatterns = [
          views.DeletePointCardView.as_view(), name='delete_point_card'),
     path("point_card/delete/complete", TemplateView.as_view(
         template_name='account/delete_point_card_complete.html'), name="delete_point_card_complete"),
+    path("does_not_have_point/", TemplateView.as_view(
+        template_name='account/does_not_have_point.html'), name="does_not_have_point"),
+
 ]
