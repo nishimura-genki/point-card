@@ -1,24 +1,48 @@
 {% load static %}
 {% load bootstrap4 %}
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ja">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="{% static "css/custom.css" %}" rel="stylesheet" />
-    <title>django-account</title>
+
+    <title>point_card</title>
 </head>
 
 <body>
-    {% block body_header %}{% endblock %}
+    <header>
+        <div class='jumbotron jumbotron-fluid bg-secondary text-white sticky-top'>
+            <div class='container'>
+                <h1>point-card</h1>
+            </div>
+        </div>
+    </header>
 
-    <div class="container mt-3">
-        {% block body %}{% endblock %}
-    </div>
+    <main>
+        <div class='container'>
+            {% if user.is_authenticated %}
+            <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'accounts:profile' %}">マイページ</a>
+            {% else %}
+            <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'login' %}">ログイン</a>
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:signup' %}">入会</a>
+            {% endif %}
+            {% block body %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class='row bg-dark text-white fixed-bottom no-gutters'>
+            <a class='col text-center' href="#">トップ</a>
+            <a class='col text-center' href="{% url 'accounts:qrcode' %}">QRコード</a>
+            <a class='col text-center' href="{% url 'accounts:profile' %}">プロフィール</a>
+        </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -29,6 +53,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
         integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
+
+
 </body>
 
 </html>

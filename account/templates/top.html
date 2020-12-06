@@ -20,7 +20,8 @@
             {% if user.is_authenticated %}
             <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'accounts:profile' %}">マイページ</a>
             {% else %}
-            <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'user_top' %}">ユーザー登録はこちら</a>
+            <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'customer_top' %}">ユーザー登録はこちら</a>
+            <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'shop_top' %}">店舗の登録はこちら</a>
             {% endif %}
         </nav>
     </div>
