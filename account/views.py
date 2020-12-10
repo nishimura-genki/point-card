@@ -34,6 +34,10 @@ class Shop_Top(generic.TemplateView):
     template_name = 'shop_top.html'
 
 
+class MyPage(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'registration/mypage.html'
+
+
 class CustomerSignUpView(generic.TemplateView):
     template_name = 'registration/customer_signup.html'
     success_url = 'customer_top'

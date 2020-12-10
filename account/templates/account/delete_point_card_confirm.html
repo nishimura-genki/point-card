@@ -1,5 +1,9 @@
+{% extends 'registration/base.html' %}
+
+{% block body %}
 <p>ポイントカードを削除します。よろしいですか?</p>
-    <form action="" method="post">
-        <button type="submit" class="btn btn-danger">はい</button>
-        {% csrf_token %}
-    </form>
+<form action="" method="post">
+    <button type="submit" class="btn btn-danger">はい</button>
+    {% csrf_token %}
+</form>
+{% endblock %}

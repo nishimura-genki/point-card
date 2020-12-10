@@ -1,12 +1,17 @@
+{% extends 'registration/base.html' %}
+
+{% block body %}
+
 <body>
 
     <video id="camera" width="300" height="200"></video>
     <canvas id="picture" width="300" height="200" hidden></canvas>
-    <form style="display: none" action="{% url 'accounts:process_qr_code' %}" method="POST" id="form", name='form'>
-        <input type="hidden" id="data" name="data" value=""/>
+    <form style="display: none" action="{% url 'accounts:process_qr_code' %}" method="POST" id="form" , name='form'>
+        <input type="hidden" id="data" name="data" value="" />
     </form>
 </body>
 {% load static %}
 <script src="{% static 'account/js/jsQR.js' %}"></script>
 <script>const action_url = "{% url 'accounts:process_qr_code' %}";</script>
 <script src="{% static 'account/js/readqr.js' %}"></script>
+{% endblock %}

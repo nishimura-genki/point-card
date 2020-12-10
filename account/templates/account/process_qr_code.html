@@ -1,22 +1,28 @@
-{% if qr.user_type == 'Customer' %}
-{% if 'cashier' in qr.action %}
-<a href="{% url 'accounts:cashier' qr.pk %}">会計する</a>
-{% endif %}
-{% if 'add_point' in qr.action %}
-<a href="{% url 'accounts:add_point' qr.pk %}">ポイントを付与する</a>
-{% endif %}
-{% if 'add_stamp' in qr.action %}
-<a href="{% url 'add_stamp' qr.pk %}">スタンプを押す</a>
-{% endif %}
-{% if 'use_point' in qr.action %}
-<a href="{% url 'use_point' qr.pk %}">ポイントを使用する</a>
-{% endif %}
-{% if 'use_stamp' in qr.action %}
-<a href="{% url 'accounts:use_stamp' qr.pk %}">スタンプを使用する</a>
-{% endif %}
-{% endif %}
-{% if qr.user_type == 'Shop' %}
-{% if 'make_point_card' in qr.action %}
-<a href="{% url 'accounts:make-point-card' qr.pk %}">このお店のポイントカードを作成</a>
-{% endif %}
-{% endif %}
+{% extends 'registration/base.html' %}
+
+{% block body %}
+<ul class="list-group list-group-flush">
+    {% if qr.user_type == 'Shop' %}
+    {% if 'cashier' in qr.action %}
+    <li class="list-group-item"><a href="{% url 'accounts:cashier' qr.pk %}">会計する</a></li>
+    {% endif %}
+    {% if 'add_point' in qr.action %}
+    <li class="list-group-item"><a href="{% url 'accounts:add_point' qr.pk %}">ポイントを付与する</a></li>
+    {% endif %}
+    {% if 'add_stamp' in qr.action %}
+    <li class="list-group-item"><a href="{% url 'accounts:add_stamp' qr.pk %}">スタンプを押す</a></li>
+    {% endif %}
+    {% if 'use_point' in qr.action %}
+    <li class="list-group-item"><a href="{% url 'accounts:use_point' qr.pk %}">ポイントを使用する</a></li>
+    {% endif %}
+    {% if 'use_stamp' in qr.action %}
+    <li class="list-group-item"><a href="{% url 'accounts:use_stamp' qr.pk %}">スタンプを使用する</a></li>
+    {% endif %}
+    {% endif %}
+    {% if qr.user_type == 'Customer' %}
+    {% if 'make_point_card' in qr.action %}
+    <li class="list-group-item"><a href="{% url 'accounts:make-point-card' qr.pk %}">このお店のポイントカードを作成</a></li>
+    {% endif %}
+    {% endif %}
+</ul>
+{% endblock %}

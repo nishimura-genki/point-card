@@ -8,6 +8,7 @@ urlpatterns = [
     path('customer_signup/', views.CustomerSignUpView.as_view(),
          name='customer_signup'),
     path('shop_signup/', views.ShopSignUpView.as_view(), name='shop_signup'),
+    path('mypage/', views.MyPage.as_view(), name='mypage'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('signup/', TemplateView.as_view(template_name='registration/signup.html'), name='signup'),
     path('delete_confirm', views.DeleteView.as_view(), name='delete-confirmation'),
@@ -22,7 +23,7 @@ urlpatterns = [
          name='customer_profile_update'),
     path('shop_profile_update/', views.ShopProfileUpDateView.as_view(),
          name='shop_profile_update'),
-    #path('make_point_card_form/', TemplateView.as_view(
+    # path('make_point_card_form/', TemplateView.as_view(
     #    template_name='registration/make_point_card_form.html'), name='make-point-card-form'),
 
     path('make_point_card/<int:shop_user_id>', views.MakePointCardView.as_view(),

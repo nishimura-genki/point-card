@@ -16,7 +16,7 @@
         <tr>
             <th scope="row">苗字</th>
             <td>{{ profile.last_name }}</td>
-        </tr> 
+        </tr>
         <tr>
             <th scope="row">名前</th>
             <td>{{ profile.first_name }}</td>
@@ -37,8 +37,10 @@
         </tr>
         {% endif %}
     </tbody>
-    {% if profile_type == 'Customer' %}<a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:customer_profile_update' %}">変更</a>{% endif %}
-    {% if profile_type == 'Shop' %}<a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:shop_profile_update' %}">変更</a>{% endif %}
+    {% if profile_type == 'Customer' %}<a class="btn btn-outline-primary btn-sm"
+        href="{% url 'accounts:customer_profile_update' %}">変更</a>{% endif %}
+    {% if profile_type == 'Shop' %}<a class="btn btn-outline-primary btn-sm"
+        href="{% url 'accounts:shop_profile_update' %}">変更</a>{% endif %}
 </table>
 
 {% endblock %}

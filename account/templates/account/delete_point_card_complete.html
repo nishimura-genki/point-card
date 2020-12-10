@@ -1,2 +1,6 @@
+{% extends 'registration/base.html' %}
+
+{% block body %}
 <p>ポイントカードを消去しました</p>
-<a href="{% url 'accounts:profile' %}">マイページへ</a>
+<a href="{% url 'accounts:mypage' %}">マイページへ</a>
+{% endblock %}

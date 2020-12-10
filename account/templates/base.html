@@ -27,7 +27,6 @@
     <main>
         <div class='container'>
             {% if user.is_authenticated %}
-            <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'accounts:profile' %}">マイページ</a>
             {% else %}
             <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'login' %}">ログイン</a>
             <a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:signup' %}">入会</a>
@@ -38,9 +37,9 @@
 
     <footer>
         <div class='row bg-dark text-white fixed-bottom no-gutters'>
-            <a class='col text-center' href="#">トップ</a>
-            <a class='col text-center' href="{% url 'accounts:qrcode' %}">QRコード</a>
-            <a class='col text-center' href="{% url 'accounts:profile' %}">プロフィール</a>
+            <a class='col text-center' href="{% url 'customer_top' %}"">トップ</a>
+            <a class='col text-center' href=" {% url 'accounts:qrcode' %}">QRコード</a>
+            <a class='col text-center' href="{% url 'accounts:mypage' %}">マイページ</a>
         </div>
     </footer>
 

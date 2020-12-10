@@ -1,16 +1,16 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script> 
-<script> 
-    $(function(){
+{% extends 'registration/base.html' %}
+{% block content %}
+<div class='row'>
+  <div id="img-qr" style="object-fit:cover;"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+  <script>
+    $(function () {
       var qrtext = '{{ data }}'
       console.log(qrtext);
       $("#img-qr").html("");
-      $("#img-qr").qrcode({width:160,height:160, text:qrtext}); 
+      $("#img-qr").qrcode({ width: 160, height: 160, text: qrtext });
     });
-    </script>
-</head>
-<body>
-<p></p>
-<div id="img-qr" style="object-fit:cover;"></div>
-</body>
-
+  </script>
+</div>
+{% endblock %}
