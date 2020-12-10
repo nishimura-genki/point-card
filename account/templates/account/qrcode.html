@@ -7,11 +7,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
   <script>
     jQuery(function($){
-      wid = ($(window).width())/2;
-      hei = ($(window).height())/2;
       var qrtext = '{{ data }}'
       console.log(qrtext);
-      $("#img-qr").html();
+      $("#img-qr").html("");
       $("#img-qr").qrcode({ width: 160, height: 160, text: qrtext });
     });
   </script>
