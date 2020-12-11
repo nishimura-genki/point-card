@@ -7,10 +7,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
   <script>
     jQuery(function($){
+
+      var window_qr_center_width = $(window).width()/2 - 80;
+      var window_qr_height = $(window).height()*2/5;
       var qrtext = '{{ data }}'
       console.log(qrtext);
       $("#img-qr").html("");
       $("#img-qr").qrcode({ width: 160, height: 160, text: qrtext });
+      $("#img-qr").offset({top:window_qr_height, left:window_qr_center_width});  // 座標設定
     });
   </script>
 </div>
