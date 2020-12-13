@@ -2,7 +2,7 @@
 
 {% block body %}
 <ul class="list-group list-group-flush">
-    {% if qr.user_type == 'Shop' %}
+    {% if qr.user_type == 'Customer' %}
     {% if 'cashier' in qr.action %}
     <li class="list-group-item"><a href="{% url 'accounts:cashier' qr.pk %}">会計する</a></li>
     {% endif %}
@@ -19,7 +19,7 @@
     <li class="list-group-item"><a href="{% url 'accounts:use_stamp' qr.pk %}">スタンプを使用する</a></li>
     {% endif %}
     {% endif %}
-    {% if qr.user_type == 'Customer' %}
+    {% if qr.user_type == 'Shop' %}
     {% if 'make_point_card' in qr.action %}
     <li class="list-group-item"><a href="{% url 'accounts:make-point-card' qr.pk %}">このお店のポイントカードを作成</a></li>
     {% endif %}
