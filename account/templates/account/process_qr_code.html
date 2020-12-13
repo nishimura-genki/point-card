@@ -1,7 +1,7 @@
 {% extends 'registration/base.html' %}
 
 {% block body %}
-<ul class="list-group list-group-flush"></ul>
+<ul class="list-group list-group-flush">
     {% if qr.user_type == 'Customer' %}
     {% if 'cashier' in qr.action %}
     <li class="list-group-item"><a href="{% url 'accounts:cashier' qr.pk %}">会計する</a></li>
