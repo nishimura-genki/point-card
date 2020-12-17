@@ -212,19 +212,12 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
             if PointCard.objects.filter(shop=shop_user.shop, customer=request.user.customer).exists():
                 raise PointCardAlreadyExists
 
-            print(shop_user.shop.has_point)
-            
-
             data = PointCard(customer=request.user.customer, shop=shop_user.shop,
                              has_point=shop_user.shop.has_point, has_stamp=shop_user.shop.has_stamp, point=0, number_of_stamps=0)
             data.save()
 
-            print(data.shop)
-            print(data.has_point)
-
             return redirect('accounts:point_card_list')
         except PointCardAlreadyExists:
-            print('ERROR!')
             context = {'object_list': PointCard.objects.filter(
                 customer=request.user.customer), 'message': 'このお店のポイントカードは作成済みです'}
             return render(request, 'account/make_point_card_fail.html', context)
