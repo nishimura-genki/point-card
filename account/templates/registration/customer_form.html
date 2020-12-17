@@ -1,5 +1,5 @@
-{% extends 'registration/base.html' %}
-{% block content %}
+{% extends 'base.html' %}
+{% block body %}
 <form method='POST'>
     {% csrf_token %}
     {{form.as_table}}

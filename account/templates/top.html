@@ -1,13 +1,5 @@
 {% extends "base.html" %}
 
 {% block body %}
-<div class="my-2 my-md-0 mr-md-3">
-    {% if user.is_authenticated %}
-    <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'accounts:mypage' %}">マイページ</a>
-    {% else %}
-    <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'accounts:customer_signup' %}">ユーザー登録はこちら</a>
-    <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'accounts:shop_signup' %}">店舗の登録はこちら</a>
-    <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'login' %}">ログイン</a>
-    {% endif %}
-</div>
+<a class='col text-center py-3' href="{% url 'accounts:mypage' %}">マイページ</a>
 {% endblock %}

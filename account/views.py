@@ -22,6 +22,26 @@ class ShopRequiredMixin(AccessMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
+class Base(generic.TemplateView):
+    template_name = 'base.html'
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Contextにuser, profile, profile_type を追加
+        """
+        user = self.request.user
+        if user.is_customer:
+            profile_type = 'Customer'
+            profile = Customer.objects.get(user=user)
+        elif user.is_shop:
+            profile_type = 'Shop'
+            profile = Shop.objects.get(user=user)
+        else:
+            profile_type = 'unknown'
+            profile = None
+        return super().get_context_data(user=user, profile=profile, profile_type=profile_type)
+
+
 class Top(generic.TemplateView):
     template_name = 'top.html'
 

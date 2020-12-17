@@ -16,31 +16,70 @@
 </head>
 
 <body>
-    <header>
-        <div class='jumbotron jumbotron-fluid bg-secondary text-white sticky-top'>
-            <div class='container'>
-                <h1>point-card</h1>
-            </div>
+
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <div class="container-fluid">
+            <h1 class="navbar-brand col-md-3 col-lg-2 me-0 py-3">point card</h1>
         </div>
     </header>
 
+    {% if user.is_shop %}
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class='nav-link active' aria-current='page' href="{% url 'shop_top' %}">トップ</a></li>
+                        <li class="nav-item"><a class='nav-link active' href=" {% url 'accounts:qrcode' %}">QRコード</a>
+                        </li>
+                        <li class="nav-item"><a class='nav-link active' href="{% url 'accounts:mypage' %}">マイページ</a>
+                        </li>
+                        <li class="nav-item"><a class='nav-link active'
+                                href="{% url 'accounts:customize_point_card' %}">カード編集</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+
+
     <main>
-        <div class='container'>
+        <div class="container-fluid">
             {% if user.is_authenticated %}
+            <div class="row text-center">
+                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                    <div class="card-signin my-5">
+                        <div class="card-body">
+
+                            {% block body %}{% endblock %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% else %}
-            <a class="btn btn-outline-primary btn-sm mr-2" href="{% url 'login' %}">ログイン</a>
-            <a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:signup' %}">入会</a>
+            <a class="btn btn-outline-primary mr-2" href="{% url 'login' %}">ログイン</a>
+            <a class="btn btn-outline-primary " href="{% url 'accounts:signup' %}">入会</a>
+            {% block login %}
+            {% endblock%}
             {% endif %}
-            {% block body %}{% endblock %}
+
         </div>
     </main>
 
     <footer>
-        <div class='row bg-dark text-white fixed-bottom no-gutters'>
-            <a class='col text-center' href="{% url 'customer_top' %}"">トップ</a>
-            <a class='col text-center' href=" {% url 'accounts:qrcode' %}">QRコード</a>
-            <a class='col text-center' href="{% url 'accounts:mypage' %}">マイページ</a>
+        {% if user.is_customer %}
+        <div class="container">
+            <div class='row bg-dark text-white fixed-bottom no-gutters'>
+                <a class='col text-center py-3' href="{% url 'customer_top' %}"">トップ</a>
+                    <a class='col text-center py-3' href=" {% url 'accounts:qrcode' %}">QRコード</a>
+                <a class='col text-center py-3' href="{% url 'accounts:mypage' %}">マイページ</a>
+            </div>
         </div>
+        {% endif %}
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

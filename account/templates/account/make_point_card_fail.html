@@ -1,8 +1,7 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
 {% block body %}
 
-{% block content %}
 <h1>失敗しました</h1>
 <p>{{message}}</p>
 
@@ -14,5 +13,4 @@
 
 <a href="{% url 'accounts:read_qr_code' %}">もう一度試す</a>
 
-{% endblock %}
 {% endblock %}

@@ -1,13 +1,13 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
 {% load bootstrap4 %}
 
-{% block content %}
+{% block body %}
 
-    <p>アカウントを削除します。よろしいですか?</p>
-    <form action="" method="post">
-        <button type="submit" class="btn btn-danger">はい</button>
-        {% csrf_token %}
-    </form>
+<p>アカウントを削除します。よろしいですか?</p>
+<form action="" method="post">
+    <button type="submit" class="btn btn-danger">はい</button>
+    {% csrf_token %}
+</form>
 
 {% endblock %}
