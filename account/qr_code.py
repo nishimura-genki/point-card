@@ -47,7 +47,8 @@ class QRCode:
         self.action = action
 
     def __str__(self):
-        return ','.join([self.user_type, str(self.pk), *self.action])
+        qr = str(','.join([self.user_type, str(self.pk), *self.action]))
+        return self.make_qr_format(string=qr)
 
     @classmethod
     def from_user(cls, user, action=all_actions):
@@ -61,7 +62,7 @@ class QRCode:
     @classmethod
     def from_str(cls, string):
 
-        string_list = string.split(',')
+        string_list = cls.parse_qr_format(qr_data=string).split(',')
         if len(string_list) < 2:
             raise QRCodeError
         if len(string_list) > 2:
@@ -93,3 +94,77 @@ class QRCode:
                     return False
 
         return True
+
+
+    def make_qr_format(self,string):
+        i = 0
+        string_list = string.split(',')
+        qr_format_list = []
+        for c in string_list:
+            if i == 0:
+                if c == 'Customer':
+                    qr_format_list.append(0)
+                elif c == 'Shop':
+                    qr_format_list.append(1)
+                else:
+                    raise QRCodeError
+            elif i == 1:
+                qr_format_list.append(c)
+                qr_format_list.append('-')
+            else:
+                if c in self.all_actions:
+                    qr_format_list.append(self.all_actions.index(c))
+                else:
+                    raise QRCodeError
+            
+            i+=1
+        
+        return ''.join(map(str,qr_format_list))
+
+    @classmethod
+    def parse_qr_format(cls,qr_data):
+        i = 0
+        check = 0
+        qr_string = []
+        qr_pk = []
+        for c in qr_data:
+            if i == 0:
+                if c == '0':
+                    qr_string.append('Customer')
+                    print(qr_string)
+                elif c == '1':
+                    qr_string.append('Shop')
+                    print(qr_string)
+                else:
+                    raise QRCodeError
+            else:
+                if check == 0:
+                    if c != '-':
+                        qr_pk.append(c)
+                    else:
+                        qr_string.append(''.join(qr_pk))
+                        check = 1
+                else:
+                    if c == '0':
+                        qr_string.append(cls.all_actions[0])
+                    elif c == '1':
+                        qr_string.append(cls.all_actions[1])
+                    elif c == '2':
+                        qr_string.append(cls.all_actions[2])
+                    elif c == '3':
+                        qr_string.append(cls.all_actions[3])
+                    elif c == '4':
+                        qr_string.append(cls.all_actions[4])
+                    elif c == '5':
+                        qr_string.append(cls.all_actions[5])
+                    else:
+                        raise QRCodeError
+ 
+            i+=1 
+        return ','.join(qr_string)
+
+        
+    
+
+
+
