@@ -213,7 +213,7 @@ class QRCodeView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         qr = qr_code.QRCode.from_user(self.request.user)
-        return super().get_context_data(data=str(qr), **kwargs)
+        return super().get_context_data(data=qr, **kwargs)
 
 
 class MakePointCardView(CustomerRequiredMixin, generic.View):
@@ -235,8 +235,6 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
             data = PointCard(customer=request.user.customer, shop=shop_user.shop,
                              has_point=shop_user.shop.has_point, has_stamp=shop_user.shop.has_stamp, point=0, number_of_stamps=0)
             data.save()
-
-            print(data.shop)
 
             return redirect('accounts:point_card_list')
         except PointCardAlreadyExists:
