@@ -12,6 +12,7 @@ from .models import Profile, Customer, Shop, PointCard
 from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm, UseStampForm, AddStampForm, CustomizePointCardForm
 User = get_user_model()
 
+from .rsa_key import Crypto 
 
 class ShopRequiredMixin(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -193,7 +194,7 @@ class QRCodeView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         qr = qr_code.QRCode.from_user(self.request.user)
-        return super().get_context_data(data=str(qr), **kwargs)
+        return super().get_context_data(data=qr, **kwargs)
 
 
 class MakePointCardView(CustomerRequiredMixin, generic.View):
@@ -212,14 +213,19 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
             if PointCard.objects.filter(shop=shop_user.shop, customer=request.user.customer).exists():
                 raise PointCardAlreadyExists
 
+            print(shop_user.shop.has_point)
+            
+
             data = PointCard(customer=request.user.customer, shop=shop_user.shop,
                              has_point=shop_user.shop.has_point, has_stamp=shop_user.shop.has_stamp, point=0, number_of_stamps=0)
             data.save()
 
             print(data.shop)
+            print(data.has_point)
 
             return redirect('accounts:point_card_list')
         except PointCardAlreadyExists:
+            print('ERROR!')
             context = {'object_list': PointCard.objects.filter(
                 customer=request.user.customer), 'message': 'このお店のポイントカードは作成済みです'}
             return render(request, 'account/make_point_card_fail.html', context)
