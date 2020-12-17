@@ -3,3 +3,6 @@ django-environ
 django-bootstrap4
 psycopg2-binary
 gunicorn
+google-cloud-secret-manager
+google-auth
+django-storages[google]

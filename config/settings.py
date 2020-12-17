@@ -16,11 +16,26 @@ import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = environ.Path(__file__) - 2
+env_file = str(BASE_DIR.path('.env'))
+if not os.path.isfile('.env'):
+    import google.auth
+    from google.cloud import secretmanager_v1 as sm
+
+    _, project = google.auth.default()
+
+    if project:
+        client = sm.SecretManagerServiceClient()
+        name = f"projects/{project}/secrets/application_settings/versions/latest"
+        payload = client.access_secret_version(
+            name=name).payload.data.decode("UTF-8")
+
+        with open(env_file, 'w') as f:
+            f.write(payload)
 
 env = environ.Env()
 
 
-env.read_env(str(BASE_DIR.path('.env')))
+env.read_env(env_file)
 
 
 # Quick-start development settings - unsuitable for production
@@ -52,6 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap4',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -89,14 +105,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
-    }
+    'default': env.db()
 }
 
 
@@ -136,7 +145,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+STATICFILES_DIRS = []
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_DEFAULT_ACL = "publicRead"
+
 AUTH_USER_MODEL = 'account.User'
 LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
