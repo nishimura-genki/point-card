@@ -17,5 +17,8 @@
       $("#img-qr").offset({ top: window_qr_height, left: window_qr_center_width });  // 座標設定
     });
   </script>
+  <div class="list-item">
+    <a href="{% url 'accounts:read_qr_code' %}">スキャン</a>
+  </div>
 </div>
 {% endblock %}

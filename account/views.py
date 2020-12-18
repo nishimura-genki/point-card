@@ -246,8 +246,6 @@ class MakePointCardView(CustomerRequiredMixin, ContextMixin, generic.View):
                              has_point=shop_user.shop.has_point, has_stamp=shop_user.shop.has_stamp, point=0, number_of_stamps=0)
             data.save()
 
-            print(data.shop)
-
             return redirect('accounts:point_card_list')
         except PointCardAlreadyExists:
             context = self.get_context_data(message='このお店のポイントカードは作成済みです')

@@ -129,7 +129,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'account.User'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/accounts/mypage'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ATOMIC_REQUESTS = True
