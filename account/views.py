@@ -1,7 +1,7 @@
 from account import qr_code
 from django.urls import reverse_lazy, reverse
 from django.views import generic
-from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.base import TemplateResponseMixin, ContextMixin
 from django.views.generic.edit import DeletionMixin, FormMixin
 from django.shortcuts import render, resolve_url, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
@@ -22,26 +22,6 @@ class ShopRequiredMixin(AccessMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
-class Base(generic.TemplateView):
-    template_name = 'base.html'
-
-    def get_context_data(self, *args, **kwargs):
-        """
-        Contextにuser, profile, profile_type を追加
-        """
-        user = self.request.user
-        if user.is_customer:
-            profile_type = 'Customer'
-            profile = Customer.objects.get(user=user)
-        elif user.is_shop:
-            profile_type = 'Shop'
-            profile = Shop.objects.get(user=user)
-        else:
-            profile_type = 'unknown'
-            profile = None
-        return super().get_context_data(user=user, profile=profile, profile_type=profile_type)
-
-
 class Top(generic.TemplateView):
     template_name = 'top.html'
 
@@ -56,6 +36,11 @@ class Shop_Top(generic.TemplateView):
 
 class MyPage(LoginRequiredMixin, generic.TemplateView):
     template_name = 'registration/mypage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
 
 
 class CustomerSignUpView(generic.TemplateView):
@@ -117,19 +102,16 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         """
-        Contextにuser, profile, profile_type を追加
+        Contextにuser, profile,  を追加
         """
         user = self.request.user
         if user.is_customer:
-            profile_type = 'Customer'
             profile = Customer.objects.get(user=user)
         elif user.is_shop:
-            profile_type = 'Shop'
             profile = Shop.objects.get(user=user)
         else:
-            profile_type = 'unknown'
             profile = None
-        return super().get_context_data(user=user, profile=profile, profile_type=profile_type)
+        return super().get_context_data(user=user, profile=profile)
 
 
 class CustomerProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
@@ -143,6 +125,11 @@ class CustomerProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
     def get_object(self):
         return self.request.user.customer
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
+
 
 class ShopProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
     model = Shop
@@ -152,6 +139,11 @@ class ShopProfileUpDateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_object(self):
         return self.request.user.shop
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
 
 
 class CustomizePointCardView(ShopRequiredMixin, generic.UpdateView):
@@ -163,6 +155,11 @@ class CustomizePointCardView(ShopRequiredMixin, generic.UpdateView):
     def get_object(self):
         return self.request.user.shop
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
+
 
 class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
     template_name = 'registration/delete_confirm.html'
@@ -172,7 +169,11 @@ class DeleteView(LoginRequiredMixin, DeletionMixin, TemplateResponseMixin, gener
         return self.request.user
 
     def get(self, request, *args, **kwargs):
-        return self.render_to_response(context=None)
+        return self.render_to_response(context=self.get_context_data())
+
+    def get_context_data(self, **kwargs):
+        context = {'user': self.request.user}
+        return context
 
 
 class CustomerRequiredMixin(AccessMixin):
@@ -191,6 +192,11 @@ class PointCardListView(CustomerRequiredMixin, generic.ListView):
     def get_queryset(self):
         return super().get_queryset().filter(customer=Customer.objects.get(user=self.request.user))
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
+
 
 class CustomerOfObjectRequiredMixin(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -207,26 +213,30 @@ class PointCardDetailView(CustomerOfObjectRequiredMixin, generic.DetailView):
     model = PointCard
     template_name = 'account/point_card_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
+
 
 class QRCodeView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'account/qrcode.html'
 
     def get_context_data(self, **kwargs):
-        qr = qr_code.QRCode.from_user(self.request.user)
-        return super().get_context_data(data=str(qr), **kwargs)
+        context = super().get_context_data()
+        user = self.request.user
+        qr = qr_code.QRCode.from_user(user)
+        context.update({'user': user, 'data': str(qr)})
+        return context
 
 
-class MakePointCardView(CustomerRequiredMixin, generic.View):
+class MakePointCardView(CustomerRequiredMixin, ContextMixin, generic.View):
 
     def get(self, request, *args, **kwargs):
         class PointCardAlreadyExists(Exception):
             pass
 
         try:
-            # context = {
-            # 'shop_id': request.POST['shop_id'],
-            # }
-            # print(context['shop_id'])
             shop_user_id = self.kwargs.get('shop_user_id')
             shop_user = User.objects.get(pk=shop_user_id)
             if PointCard.objects.filter(shop=shop_user.shop, customer=request.user.customer).exists():
@@ -240,14 +250,18 @@ class MakePointCardView(CustomerRequiredMixin, generic.View):
 
             return redirect('accounts:point_card_list')
         except PointCardAlreadyExists:
-            context = {'object_list': PointCard.objects.filter(
-                customer=request.user.customer), 'message': 'このお店のポイントカードは作成済みです'}
+            context = self.get_context_data(message='このお店のポイントカードは作成済みです')
             return render(request, 'account/make_point_card_fail.html', context)
         except(TypeError, ValueError, Shop.DoesNotExist, User.DoesNotExist, PointCard.DoesNotExist):
-            print('Error')
-            context = {'object_list': PointCard.objects.filter(
-                customer=request.user.customer)}
+            context = self.get_context_data()
             return render(request, 'account/make_point_card_fail.html', context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.User
+        context['object_list'] = PointCard.objects.filter(
+            custoemr=self.request.user.customer)
+        return context
 
 
 class PointCardMixin:
@@ -286,6 +300,7 @@ class UsePointView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["points_point_card_has"] = self.get_point_card().point
+        context['user'] = self.request.user
         return context
 
     def get(self, request, *args, **kwargs):
@@ -313,6 +328,7 @@ class UseStampView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["stamps_point_card_has"] = self.get_point_card().number_of_stamps
+        context['user'] = self.request.user
         return context
 
     def get(self, request, *args, **kwargs):
@@ -341,6 +357,11 @@ class AddPointView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
         else:
             return super().get(self, request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
+
 
 class AddStampView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
     success_url = reverse_lazy('shop_top')
@@ -359,6 +380,11 @@ class AddStampView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
             return redirect('accounts:does_not_have_stamp')
         else:
             return super().get(self, request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
 
 
 class CashierView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit.ProcessFormView):
@@ -380,14 +406,20 @@ class CashierView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["points_point_card_has"] = self.get_point_card().point
+        context['user'] = self.request.user
         return context
 
 
 class ReadQRCodeView(generic.TemplateView):
     template_name = "account/read_qr_code.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
 
-class ProcessQRCodeView(generic.View):
+
+class ProcessQRCodeView(ContextMixin, generic.View):
     def get(self, request, *args, **kwargs):
         data = request.GET['data']
         try:
@@ -397,8 +429,13 @@ class ProcessQRCodeView(generic.View):
         except qr_code.QRCodeError:
             return redirect('accounts:read_qr_code')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
 
-class DeletePointCardView(CustomerOfObjectRequiredMixin, DeletionMixin, TemplateResponseMixin, generic.View):
+
+class DeletePointCardView(CustomerOfObjectRequiredMixin, DeletionMixin, TemplateResponseMixin, ContextMixin, generic.View):
 
     template_name = 'account/delete_point_card_confirm.html'
     success_url = reverse_lazy('accounts:delete_point_card_complete')
@@ -408,3 +445,8 @@ class DeletePointCardView(CustomerOfObjectRequiredMixin, DeletionMixin, Template
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response(context=None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context
