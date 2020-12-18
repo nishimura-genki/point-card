@@ -12,7 +12,7 @@
             <th scope="row">入会日</th>
             <td>{{ user.date_joined }}</td>
         </tr>
-        {% if profile_type == 'Customer' %}
+        {% if user.is_customer %}
         <tr>
             <th scope="row">苗字</th>
             <td>{{ profile.last_name }}</td>
@@ -30,7 +30,7 @@
             <td>{{ profile.age }}</td>
         </tr>
         {% endif %}
-        {% if profile_type == 'Shop' %}
+        {% if user.is_shop %}
         <tr>
             <th scope="row">店舗名</th>
             <td>{{ profile.shop_name }}</td>
