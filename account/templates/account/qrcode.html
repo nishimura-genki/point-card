@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class='row'>
-  <div id="img-qr" style="object-fit:cover;"></div>
+  <div id="img-qr" class="mx-auto" style="object-fit:cover;"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
   <script>
@@ -14,11 +14,9 @@
       console.log(qrtext);
       $("#img-qr").html("");
       $("#img-qr").qrcode({ width: 160, height: 160, text: qrtext });
-      $("#img-qr").offset({ top: window_qr_height, left: window_qr_center_width });  // 座標設定
+      //$("#img-qr").offset({ top: window_qr_height, left: window_qr_center_width });  // 座標設定
     });
   </script>
-  <div class="list-item">
-    <a href="{% url 'accounts:read_qr_code' %}">スキャン</a>
-  </div>
 </div>
+<a class="btn btn-outline-primary mt-4" href="{% url 'accounts:read_qr_code' %}">スキャン</a>
 {% endblock %}
