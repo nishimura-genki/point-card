@@ -256,9 +256,9 @@ class MakePointCardView(CustomerRequiredMixin, ContextMixin, generic.View):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user'] = self.request.User
+        context['user'] = self.request.user
         context['object_list'] = PointCard.objects.filter(
-            custoemr=self.request.user.customer)
+            customer=self.request.user.customer)
         return context
 
 
