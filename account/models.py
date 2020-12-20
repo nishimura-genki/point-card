@@ -100,9 +100,10 @@ class Customer(Profile):
 class Shop(Profile):
     shop_name = models.CharField(_('店舗名'), max_length=150)
     has_point = models.BooleanField(
-        _('ポイント機能を使用する'), default=False, help_text='ユーザがポイントカードを作成したときにそのポイントカードがポイントカード機能を使用するか')
+        _('ポイント機能を使用する'), default=False)  # help_text='ユーザがポイントカードを作成したときにそのポイントカードがポイントカード機能を使用するか'
     has_stamp = models.BooleanField(
-        _('スタンプ機能を使用する'), default=False, help_text='ユーザがポイントカードを作成したときにそのポイントカードがポイントカード機能を使用するか')
+        _('スタンプ機能を使用する'), default=False)  # help_text='ユーザがポイントカードを作成したときにそのポイントカードがポイントカード機能を使用するか'
+
     def __str__(self):
         return str(self.shop_name)
 

@@ -1,6 +1,6 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
-{% block content %}
+{% block body %}
 
 <table class="table borderless">
     <tbody>
@@ -12,7 +12,7 @@
             <th scope="row">入会日</th>
             <td>{{ user.date_joined }}</td>
         </tr>
-        {% if profile_type == 'Customer' %}
+        {% if user.is_customer %}
         <tr>
             <th scope="row">苗字</th>
             <td>{{ profile.last_name }}</td>
@@ -30,16 +30,16 @@
             <td>{{ profile.age }}</td>
         </tr>
         {% endif %}
-        {% if profile_type == 'Shop' %}
+        {% if user.is_shop %}
         <tr>
             <th scope="row">店舗名</th>
             <td>{{ profile.shop_name }}</td>
         </tr>
         {% endif %}
     </tbody>
-    {% if profile_type == 'Customer' %}<a class="btn btn-outline-primary btn-sm"
+    {% if user.is_customer %}<a class="btn btn-outline-primary btn-sm"
         href="{% url 'accounts:customer_profile_update' %}">変更</a>{% endif %}
-    {% if profile_type == 'Shop' %}<a class="btn btn-outline-primary btn-sm"
+    {% if user.is_shop %}<a class="btn btn-outline-primary btn-sm"
         href="{% url 'accounts:shop_profile_update' %}">変更</a>{% endif %}
 </table>
 

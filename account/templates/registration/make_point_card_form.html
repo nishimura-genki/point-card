@@ -1,28 +1,22 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
-{% block content %}
+{% block body %}
 
-<body>
+<h1>QRコード読み取り</h1>
 
-    
-    
-    <h1>QRコード読み取り</h1>
+<video id="camera" width="300" height="200"></video>
+<canvas id="picture" width="300" height="200" hidden></canvas>
+<p id="output" hidden></p>
 
-    <video id="camera" width="300" height="200"></video>
-    <canvas id="picture" width="300" height="200" hidden></canvas>
-    <p id="output" hidden></p>
+<form action="{% url 'accounts:make-point-card' %}" method="post">
+  {% csrf_token %}
+  <div>
+    <label for="shop_id">shop_id</label>
+    <input type="text" id="shop_id" name="shop_id">
+  </div>
+  <input type="submit" value="送信する">
+</form>
 
-    <form action="{% url 'accounts:make-point-card' %}" method="post">
-        {% csrf_token %}
-        <div>
-          <label for="shop_id">shop_id</label>
-          <input type="text" id="shop_id" name="shop_id">
-        </div>
-        <input type="submit" value="送信する">
-    </form>
-
-
-</body>
 {% load static %}
 <script src="{% static 'js/jsQR.js' %}"></script>
 <script src="{% static 'js/readqr.js' %}"></script>
