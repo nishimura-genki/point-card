@@ -11,6 +11,8 @@
     {% csrf_token %}
 </form> {% endcomment %}
 <h5>入会</h5>
-<a href="{% url 'accounts:customer_signup' %}">ユーザーの登録はこちら</a>
-<a href="{% url 'accounts:shop_signup' %}">店舗の登録はこちら</a>
+<ul>
+    <li><a class="btn btn-outline-primary mt-2" href="{% url 'accounts:shop_signup' %}">店舗の登録はこちら</a></li>
+    <li><a class="btn btn-outline-primary mt-2" href="{% url 'accounts:customer_signup' %}">ユーザーの登録はこちら</a></li>
+</ul>
 {% endblock %}
