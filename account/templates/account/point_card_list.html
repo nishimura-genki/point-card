@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block body %}
-<li class="pointcard-item">
-    <a href="{% url 'accounts:read_qr_code' %}">ポイントカード作成</a>
-</li>
+<a class="btn btn-outline-primary" href="{% url 'accounts:read_qr_code' %}">ポイントカード作成</a>
 {% for card in object_list %}
-<li class="pointcard-item">
+<li class="list-group-item mt-3">
     <a href="{% url 'accounts:point_card_detail' card.pk %}">{{card.shop}}</a>
 </li>
 {% endfor %}

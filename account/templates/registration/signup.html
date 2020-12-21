@@ -4,13 +4,15 @@
 
 {% block content %}
 
-    {% comment %} <h5 class="card-title text-center">入会</h5>
-    <form action="" method="POST">
-        {% bootstrap_form form layout='' %}
-        <button type="submit" class="btn btn-primary btn-block">入会</button>
-        {% csrf_token %}
-    </form> {% endcomment %}
-    <h5>入会</h5>
-    <a href="{% url 'accounts:customer_signup' %}">客</a>
-    <a href="{% url 'accounts:shop_signup' %}">店舗</a>
+{% comment %} <h5 class="card-title text-center">入会</h5>
+<form action="" method="POST">
+    {% bootstrap_form form layout='' %}
+    <button type="submit" class="btn btn-primary btn-block">入会</button>
+    {% csrf_token %}
+</form> {% endcomment %}
+<h5>入会</h5>
+<ul>
+    <li><a class="btn btn-outline-primary mt-2" href="{% url 'accounts:shop_signup' %}">店舗の登録はこちら</a></li>
+    <li><a class="btn btn-outline-primary mt-2" href="{% url 'accounts:customer_signup' %}">ユーザーの登録はこちら</a></li>
+</ul>
 {% endblock %}

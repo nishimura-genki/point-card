@@ -34,10 +34,6 @@ class Top(generic.TemplateView):
     template_name = 'top.html'
 
 
-class Customer_Top(generic.TemplateView):
-    template_name = 'customer_top.html'
-
-
 class Shop_Top(generic.TemplateView):
     template_name = 'shop_top.html'
 
@@ -53,7 +49,7 @@ class MyPage(LoginRequiredMixin, generic.TemplateView):
 
 class CustomerSignUpView(generic.TemplateView):
     template_name = 'registration/customer_signup.html'
-    success_url = 'customer_top'
+    success_url = '/'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
