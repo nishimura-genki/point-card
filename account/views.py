@@ -296,7 +296,7 @@ class UsePointView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
     template_name = 'account/use_point.html'
 
     def get_initial(self):
-        return {'points_point_card_has': int(PointCard.objects.get(pk=self.kwargs.get('pk')).point)}
+        return {'points_point_card_has': int(self.get_point_card().point)}
 
     def form_valid(self, form):
         point_card = self.get_point_card()
@@ -374,6 +374,7 @@ class AddPointView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
 
     def get(self, request, *args, **kwargs):
         point_card = self.get_point_card()
+
         if not point_card.has_point:
             return redirect('accounts:does_not_have_point')
         else:
@@ -500,3 +501,4 @@ class PointCardLogListView(generic.ListView):
         return object_list
     
  
+    
