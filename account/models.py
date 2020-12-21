@@ -131,15 +131,5 @@ class PointCardLog(models.Model):
 
     time = models.TimeField(verbose_name="time")
     date = models.DateField(verbose_name="date")
-
-    ACTION_LIST = (
-        (1, 'casier'),
-        (2, 'add_point'),
-        (3, 'make_point_card'),
-        (4, 'user_stamp'),
-        (5, 'use_point'),
-        (6, 'add_stamp')
-    )
    
-    action = models.IntegerField(_('action'), choices=ACTION_LIST,
-                                 null=True, blank=True)
+    action = models.CharField(_('action'), max_length=10, null=True)

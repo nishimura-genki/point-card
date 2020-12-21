@@ -12,6 +12,13 @@ from .models import Profile, Customer, Shop, PointCard, PointCardLog
 from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm, UseStampForm, AddStampForm, CustomizePointCardForm
 User = get_user_model()
 import datetime
+from django.db.models import Q
+import matplotlib
+matplotlib.use('Agg')
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import base64
 
 
 class ShopRequiredMixin(AccessMixin):
@@ -297,7 +304,7 @@ class UsePointView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
         point_card.save()
         
         dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action=5)
+        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action='use_point')
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -330,7 +337,7 @@ class UseStampView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
         point_card.save()
 
         dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action=4)
+        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action='suer_stamp')
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -360,7 +367,7 @@ class AddPointView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
         point_card.save()
 
         dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action=2)
+        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action='add_point')
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -389,13 +396,14 @@ class AddStampView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
         point_card.save()
 
         dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action=6)
+        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action='add_stamp')
         pointcard_log.save()
 
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
         point_card = self.get_point_card()
+
         if not point_card.has_stamp:
             return redirect('accounts:does_not_have_stamp')
         else:
@@ -423,7 +431,7 @@ class CashierView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit
         point_card.save()
 
         dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action=1)
+        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action='cashier')
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -475,3 +483,20 @@ class DeletePointCardView(CustomerOfObjectRequiredMixin, DeletionMixin, Template
         context = super().get_context_data(**kwargs)
         context["user"] = self.request.user
         return context
+
+
+class PointCardLogListView(generic.ListView):
+    model = PointCardLog
+    template_name = 'account/point_card_log.html'
+    
+
+    def get_queryset(self):
+        query_word = self.request.GET.get('query')
+        object_list = PointCardLog.objects.filter(shop=self.request.user.shop).order_by('-date','-time')
+ 
+        if query_word:
+            object_list = object_list.filter(Q(action=query_word))
+       
+        return object_list
+    
+  
