@@ -31,8 +31,8 @@
     <div class="container-fluid h-100">
         <div class="row h-100">
             {% if user.is_shop %}
-            <nav class="col-2 navbar navbar-dark bg-light fixed-left">
-                <ul class="navbar-nav">
+            <nav class="col-2 bg-light sidebar_fixed">
+                <ul class="navbar-nav mt-5">
                     <li class="nav-item">
                         <a class='nav-link text-primary' href="{% url 'shop_top' %}">トップ</a>
                     </li>
@@ -59,8 +59,10 @@
                     </div>
                 </div>
                 {% else %}
-                <a class="btn btn-outline-primary mr-2" href="{% url 'login' %}">ログイン</a>
-                <a class="btn btn-outline-primary " href="{% url 'accounts:signup' %}">入会</a>
+                <div class="text-center">
+                    <a class="btn btn-outline-primary mr-2 mt-4" href="{% url 'login' %}">ログイン</a>
+                    <a class="btn btn-outline-primary mt-4" href="{% url 'accounts:signup' %}">入会</a>
+                </div>
                 {% block login %}
                 {% endblock%}
                 {% endif %}
