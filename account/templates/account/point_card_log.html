@@ -4,7 +4,7 @@
 
 <form action="" method="get">
     <select name="query">
-        <option value="">未指定</option>
+        <option value="">全て</option>
         <option value="cashier">cashier</option>
         <option value="add_point">add_point</option>
         <option value="make_point_card">make_point_card</option>
@@ -25,6 +25,8 @@
                 <th class="text-center">time</th>
                 <th class="text-center">action</th>
                 <th class="text-center">customer</th>
+                <th class="text-center">point</th>
+                <th class="text-center">stamp</th>
             </tr>
         </thead>
 
@@ -35,6 +37,8 @@
                 <td class="text-center" width="100">{{ data.time }}</td>
                 <td class="text-center" width="140">{{ data.action }}</td>
                 <td class="text-center" width="140">{{ data.customer }}</td>
+                <td class="text-center" width="140">{{ data.point }}</td>
+                <td class="text-center" width="140">{{ data.number_of_stamps }}</td>
             </tr>
         {% endfor %}
         </tbody>

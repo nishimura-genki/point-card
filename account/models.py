@@ -133,3 +133,7 @@ class PointCardLog(models.Model):
     date = models.DateField(verbose_name="date")
    
     action = models.CharField(_('action'), max_length=10, null=True)
+
+    point = models.IntegerField(blank=True, null=True)
+
+    number_of_stamps = models.IntegerField(blank=True, null=True)
