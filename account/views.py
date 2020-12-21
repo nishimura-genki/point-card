@@ -337,7 +337,7 @@ class UseStampView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
         point_card.save()
 
         dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action='suer_stamp')
+        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time() ,date=dt_now.date() ,action='use_stamp')
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -499,4 +499,4 @@ class PointCardLogListView(generic.ListView):
        
         return object_list
     
-  
+ 
