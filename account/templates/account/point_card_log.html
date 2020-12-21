@@ -3,9 +3,19 @@
 
 
 <form action="" method="get">
-    <input name="query" value="{{ request.GET.query }}" type="text">
+    <select name="query">
+        <option value="">未指定</option>
+        <option value="cashier">cashier</option>
+        <option value="add_point">add_point</option>
+        <option value="make_point_card">make_point_card</option>
+        <option value="add_stamp">add_stamp</option>
+        <option value="use_point">use_point</option>
+        <option value="use_stamp">use_stamp</option>
+    </select>
+    
     <button type="submit">検索する</button>
 </form>
+
 
 <div class="table-responsive">
     <table width="100%" class="table table-striped table-bordered table-hover">
