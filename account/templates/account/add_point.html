@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block body %}
+
 <form method="POST">
     {% csrf_token %}
     {{form}}
-    <button class="btn btn-outline-primary" type="submit">付与</button>
+    <button class="btn btn-outline-primary d-block mx-auto mt-3" type="submit">付与</button>
 </form>
 {% endblock %}

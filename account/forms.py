@@ -131,7 +131,7 @@ class AddStampForm(forms.Form):
 class CashierForm(forms.Form):
     points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
     price = forms.IntegerField(min_value=0, label='お会計額')
-    point_rate = forms.FloatField(min_value=0, label="ポイント率")
+    point_rate = forms.FloatField(min_value=0, label="ポイント率(%)")
     points_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
     error_messages = {'not_enough_points': _('ポイントが足りません')}
 
