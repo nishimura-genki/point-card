@@ -18,7 +18,7 @@ from django.contrib.auth import (
 from .models import Profile, Customer, Shop, PointCard, PointCardLog
 from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm, UseStampForm, AddStampForm, CustomizePointCardForm
 User = get_user_model()
-matplotlib.use('Agg')
+
 
 
 class ShopRequiredMixin(AccessMixin):
