@@ -21,7 +21,7 @@
     {% endif %}
     {% if qr.user_type == 'Shop' %}
     {% if 'make_point_card' in qr.action %}
-    <li class="list-group-item"><a href="{% url 'accounts:make-point-card' qr.pk %}">このお店のポイントカードを作成</a></li>
+    <a class="btn btn-outline-primary" href="{% url 'accounts:make-point-card' qr.pk %}">このお店のポイントカードを作成</a>
     {% endif %}
     {% endif %}
 </ul>
