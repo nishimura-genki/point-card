@@ -6,7 +6,6 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager, Permission
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-
 class UserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
         email = self.normalize_email(email)
@@ -122,29 +121,3 @@ class PointCard(models.Model):
     class Meta:
         verbose_name = 'point card'
         verbose_name_plural = 'point cards'
-
-
-class PointCardLog(models.Model):
-    customer = models.ForeignKey("account.Customer", verbose_name=_(
-        "customer"), on_delete=models.CASCADE, null=True)
-    shop = models.ForeignKey("account.Shop", verbose_name=_(
-        "shop"), on_delete=models.CASCADE, null=True)
-
-    time = models.TimeField(verbose_name="time")
-    date = models.DateField(verbose_name="date")
-   
-    action = models.CharField(_('action'), max_length=10, null=True)
-
-    point = models.IntegerField(blank=True, null=True)
-
-    number_of_stamps = models.IntegerField(blank=True, null=True)
-
-    GENDER_CHOICES = (
-        (1, '男性'),
-        (2, '女性'),
-        (3, 'その他'),
-    )
-    gender = models.IntegerField(_('性別'), choices=GENDER_CHOICES,
-                                 null=True, blank=True)
-    age = models.IntegerField(_('年齢'), null=True, blank=True,
-                              validators=[MinValueValidator(1), MaxValueValidator(100)])

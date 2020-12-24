@@ -3,8 +3,7 @@
 {% block body %}
 <p>ポイントカードを削除します。よろしいですか?</p>
 <form action="" method="post">
-    <button type="submit" class="btn btn-outline-danger mr-2">はい</button>
-    <button class="btn btn-outline-primary" onclick="history.back(); return false;"">いいえ</button>
+    <button type="submit" class="btn btn-danger">はい</button>
     {% csrf_token %}
 </form>
 {% endblock %}

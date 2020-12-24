@@ -1,10 +1,3 @@
-import base64
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import matplotlib
-from django.db.models import Q
-import datetime
 from account import qr_code
 from django.urls import reverse_lazy, reverse
 from django.views import generic
@@ -15,10 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.contrib.auth import (
     get_user_model, logout as auth_logout,
 )
-from .models import Profile, Customer, Shop, PointCard, PointCardLog
+from .models import Profile, Customer, Shop, PointCard
 from .forms import UserCreateForm, CustomerCreateForm, ShopCreateForm, CustomerProfileUpDateForm, ShopProfileUpDateForm, UsePointForm, AddPointForm, CashierForm, UseStampForm, AddStampForm, CustomizePointCardForm
 User = get_user_model()
-
 
 
 class ShopRequiredMixin(AccessMixin):
@@ -248,7 +240,6 @@ class MakePointCardView(CustomerRequiredMixin, ContextMixin, generic.View):
 
             data = PointCard(customer=request.user.customer, shop=shop_user.shop,
                              has_point=shop_user.shop.has_point, has_stamp=shop_user.shop.has_stamp, point=0, number_of_stamps=0)
-
             data.save()
 
             return redirect('accounts:point_card_list')
@@ -292,23 +283,17 @@ class UsePointView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
     template_name = 'account/use_point.html'
 
     def get_initial(self):
-        return {'points_point_card_has': int(self.get_point_card().point)}
+        return {'points_point_card_has': int(PointCard.objects.get(pk=self.kwargs.get('pk')).point)}
 
     def form_valid(self, form):
         point_card = self.get_point_card()
         point_card.point -= form.cleaned_data['points_to_use']
         point_card.save()
-
-        dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time(), date=dt_now.date(), 
-            action='use_point', point=-form.cleaned_data['points_to_use'], gender=point_card.customer.gender, age=point_card.customer.age)
-        pointcard_log.save()
-
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['points_point_card_has'] = self.get_point_card().point
+        context["points_point_card_has"] = self.get_point_card().point
         context['user'] = self.request.user
         return context
 
@@ -332,12 +317,6 @@ class UseStampView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
         point_card = self.get_point_card()
         point_card.number_of_stamps -= form.cleaned_data['stamps_to_use']
         point_card.save()
-
-        dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(
-        ), date=dt_now.date(), action='use_stamp', number_of_stamps=-form.cleaned_data['stamps_to_use'], gender=point_card.customer.gender, age=point_card.customer.age)
-        pointcard_log.save()
-
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -361,20 +340,12 @@ class AddPointView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
 
     def form_valid(self, form):
         point_card = self.get_point_card()
-
         point_card.point += form.cleaned_data['points_to_add']
         point_card.save()
-
-        dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(
-        ), date=dt_now.date(), action='add_point', point=form.cleaned_data['points_to_add'], gender=point_card.customer.gender, age=point_card.customer.age)
-        pointcard_log.save()
-
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
         point_card = self.get_point_card()
-
         if not point_card.has_point:
             return redirect('accounts:does_not_have_point')
         else:
@@ -395,17 +366,10 @@ class AddStampView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
         point_card = self.get_point_card()
         point_card.number_of_stamps += form.cleaned_data['stamps_to_add']
         point_card.save()
-
-        dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(
-        ), date=dt_now.date(), action='add_stamp', number_of_stamps=form.cleaned_data['stamps_to_add'], gender=point_card.customer.gender, age=point_card.customer.age)
-        pointcard_log.save()
-
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
         point_card = self.get_point_card()
-
         if not point_card.has_stamp:
             return redirect('accounts:does_not_have_stamp')
         else:
@@ -428,15 +392,9 @@ class CashierView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit
     def form_valid(self, form):
         point_card = self.get_point_card()
         point_card.point += form.cleaned_data['price'] * \
-            form.cleaned_data['point_rate']*0.01
+            form.cleaned_data['point_rate']
         point_card.point -= form.cleaned_data['points_to_use']
         point_card.save()
-
-        dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(), date=dt_now.date(), action='cashier', point=form.cleaned_data['price'] *
-                                     form.cleaned_data['point_rate']*0.01-form.cleaned_data['points_to_use'], gender=point_card.customer.gender, age=point_card.customer.age)
-        pointcard_log.save()
-
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -486,18 +444,3 @@ class DeletePointCardView(CustomerOfObjectRequiredMixin, DeletionMixin, Template
         context = super().get_context_data(**kwargs)
         context["user"] = self.request.user
         return context
-
-
-class PointCardLogListView(generic.ListView):
-    model = PointCardLog
-    template_name = 'account/point_card_log.html'
-
-    def get_queryset(self):
-        query_word = self.request.GET.get('query')
-        object_list = PointCardLog.objects.filter(
-            shop=self.request.user.shop).order_by('-date', '-time')
-
-        if query_word:
-            object_list = object_list.filter(Q(action=query_word))
-
-        return object_list
