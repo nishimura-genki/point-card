@@ -1,0 +1,37 @@
+steps:
+- name: "gcr.io/cloud-builders/docker"
+  args: ["build", "-t", "$_GCR_HOSTNAME/point-card-298806/django-cloudrun", "."]
+
+- name: "gcr.io/cloud-builders/docker"
+  args: ["push", "$_GCR_HOSTNAME/point-card-298806/django-cloudrun"]
+
+- name: "gcr.io/google-appengine/exec-wrapper"
+  args: ["-i", "$_GCR_HOSTNAME/point-card-298806/django-cloudrun",
+         "-s", "point-card-298806:asia-northeast1:point-card-instance2",
+         "--", "python", "manage.py", "migrate"]
+
+- name: "gcr.io/google-appengine/exec-wrapper"
+  args: ["-i", "$_GCR_HOSTNAME/point-card-298806/django-cloudrun",
+         "-s", "point-card-298806:asia-northeast1:point-card-instance2",
+         "--", "python", "manage.py", "collectstatic", "--no-input"]
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  args:
+    - run
+    - services
+    - update
+    - $_SERVICE_NAME
+    - '--platform=managed'
+    - '--image=$_GCR_HOSTNAME/point-card-298806/django-cloudrun'
+    - '--region=$_DEPLOY_REGION'
+    - '--quiet'
+  id: Deploy
+  entrypoint: gcloud
+
+images:
+- "$_GCR_HOSTNAME/point-card-298806/django-cloudrun"
+options:
+  substitutionOption: ALLOW_LOOSE
+substitutions:
+  _SERVICE_NAME: point-card
+  _GCR_HOSTNAME: gcr.io
+  _DEPLOY_REGION: asia-northeast1
