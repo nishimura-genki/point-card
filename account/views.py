@@ -300,8 +300,8 @@ class UsePointView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
         point_card.save()
 
         dt_now = datetime.datetime.now()
-        pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(
-        ), date=dt_now.date(), action='use_point', point=-form.cleaned_data['points_to_use'])
+        pointcard_log = PointCardLog(customer=point_card.customer,shop=point_card.shop, time=dt_now.time(), date=dt_now.date(), 
+            action='use_point', point=-form.cleaned_data['points_to_use'], gender=point_card.customer.gender, age=point_card.customer.age)
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -335,7 +335,7 @@ class UseStampView(PointCardMixin, ShopRequiredMixin, FormMixin, TemplateRespons
 
         dt_now = datetime.datetime.now()
         pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(
-        ), date=dt_now.date(), action='use_stamp', number_of_stamps=-form.cleaned_data['stamps_to_use'])
+        ), date=dt_now.date(), action='use_stamp', number_of_stamps=-form.cleaned_data['stamps_to_use'], gender=point_card.customer.gender, age=point_card.customer.age)
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -367,7 +367,7 @@ class AddPointView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
 
         dt_now = datetime.datetime.now()
         pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(
-        ), date=dt_now.date(), action='add_point', point=form.cleaned_data['points_to_add'])
+        ), date=dt_now.date(), action='add_point', point=form.cleaned_data['points_to_add'], gender=point_card.customer.gender, age=point_card.customer.age)
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -398,7 +398,7 @@ class AddStampView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edi
 
         dt_now = datetime.datetime.now()
         pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(
-        ), date=dt_now.date(), action='add_stamp', number_of_stamps=form.cleaned_data['stamps_to_add'])
+        ), date=dt_now.date(), action='add_stamp', number_of_stamps=form.cleaned_data['stamps_to_add'], gender=point_card.customer.gender, age=point_card.customer.age)
         pointcard_log.save()
 
         return super().form_valid(form)
@@ -434,7 +434,7 @@ class CashierView(PointCardMixin, FormMixin, TemplateResponseMixin, generic.edit
 
         dt_now = datetime.datetime.now()
         pointcard_log = PointCardLog(customer=point_card.customer, shop=point_card.shop, time=dt_now.time(), date=dt_now.date(), action='cashier', point=form.cleaned_data['price'] *
-                                     form.cleaned_data['point_rate']-form.cleaned_data['points_to_use'])
+                                     form.cleaned_data['point_rate']*0.01-form.cleaned_data['points_to_use'], gender=point_card.customer.gender, age=point_card.customer.age)
         pointcard_log.save()
 
         return super().form_valid(form)
