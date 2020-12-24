@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<p>{{stamps_point_card_has}}</p>
+<p>現在の所持スタンプ数：{{stamps_point_card_has}}</p>
 <form method="POST">
     {% csrf_token %}
     {{form}}
-    <button type="submit">使う</button>
+    <button class="btn btn-outline-primary d-block mx-auto mt-3" type="submit">使う</button>
 </form>
 {% endblock %}

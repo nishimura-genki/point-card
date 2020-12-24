@@ -37,9 +37,9 @@
         </tr>
         {% endif %}
     </tbody>
-    {% if user.is_customer %}<a class="btn btn-outline-primary btn-sm"
+    {% if user.is_customer %}<a class="btn btn-outline-primary mb-3"
         href="{% url 'accounts:customer_profile_update' %}">変更</a>{% endif %}
-    {% if user.is_shop %}<a class="btn btn-outline-primary btn-sm"
+    {% if user.is_shop %}<a class="btn btn-outline-primary mb-3"
         href="{% url 'accounts:shop_profile_update' %}">変更</a>{% endif %}
 </table>
 
