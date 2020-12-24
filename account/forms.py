@@ -82,6 +82,9 @@ class ShopProfileUpDateForm(forms.ModelForm):
 
 
 class CustomizePointCardForm(forms.ModelForm):
+    error_messages = {'not_have_point_or_stamp': _(
+        'ポイント機能かスタンプ機能のどちらかは使用してください')}
+
     class Meta:
         model = Shop
         fields = ('has_point', 'has_stamp',)
@@ -90,6 +93,13 @@ class CustomizePointCardForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+
+    def clean_has_point(self):
+        has_point = self.cleaned_data.get('has_point')
+        has_stamp = self.changed_data.get('has_stamp')
+        if not has_point and not has_stamp:
+            raise ValidationError(
+                self.error_messages['not_have_point_or_stamp'], code='not_have_point_or_stamp')
 
 
 class UsePointForm(forms.Form):
