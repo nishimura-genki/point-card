@@ -104,7 +104,7 @@ class CustomizePointCardForm(forms.ModelForm):
 
 class UsePointForm(forms.Form):
     points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
-    points_to_use = forms.IntegerField(label='使うポイント数 ', min_value=0)
+    points_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
     error_messages = {'not_enough_points': _('ポイントが足りません')}
 
     def clean_points_to_use(self):
@@ -118,7 +118,7 @@ class UsePointForm(forms.Form):
 
 class UseStampForm(forms.Form):
     stamps_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
-    stamps_to_use = forms.IntegerField(label='使うポイント数 ', min_value=0)
+    stamps_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
     error_messages = {'not_enough_stamps': _('スタンプが足りません')}
 
     def clean_stamps_to_use(self):
@@ -137,11 +137,10 @@ class AddPointForm(forms.Form):
 class AddStampForm(forms.Form):
     stamps_to_add = forms.IntegerField(label='押すスタンプ数', min_value=0)
 
-
 class CashierForm(forms.Form):
     points_point_card_has = forms.IntegerField(widget=forms.HiddenInput())
     price = forms.IntegerField(min_value=0, label='お会計額')
-    point_rate = forms.FloatField(min_value=0, label="ポイント率(%)")
+    point_rate = forms.FloatField(min_value=0, label="ポイント率")
     points_to_use = forms.IntegerField(label='使うポイント数', min_value=0)
     error_messages = {'not_enough_points': _('ポイントが足りません')}
 
