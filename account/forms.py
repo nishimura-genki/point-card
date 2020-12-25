@@ -100,6 +100,7 @@ class CustomizePointCardForm(forms.ModelForm):
         if not has_point and not has_stamp:
             raise ValidationError(
                 self.error_messages['not_have_point_or_stamp'], code='not_have_point_or_stamp')
+        return has_point
 
 
 class UsePointForm(forms.Form):
