@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<h1>失敗しました</h1>
+<p>{{message}}</p>
+
+
+{% for pointcard in object_list %}
+<p><a href="{% url 'accounts:point_card_detail' pointcard.pk %}">{{pointcard.shop}}</a></p>
+{% endfor %}
+
+
+<a href="{% url 'accounts:read_qr_code' %}">もう一度試す</a>
+
+{% endblock %}

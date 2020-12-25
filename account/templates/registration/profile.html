@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<table class="table borderless">
+    <tbody>
+        <tr>
+            <th scope="row">E-mail</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">入会日</th>
+            <td>{{ user.date_joined }}</td>
+        </tr>
+        {% if user.is_customer %}
+        <tr>
+            <th scope="row">苗字</th>
+            <td>{{ profile.last_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">名前</th>
+            <td>{{ profile.first_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">性別</th>
+            <td>{{ profile.get_gender_display }}</td>
+        </tr>
+        <tr>
+            <th scope="row">年齢</th>
+            <td>{{ profile.age }}</td>
+        </tr>
+        {% endif %}
+        {% if user.is_shop %}
+        <tr>
+            <th scope="row">店舗名</th>
+            <td>{{ profile.shop_name }}</td>
+        </tr>
+        {% endif %}
+    </tbody>
+    {% if user.is_customer %}<a class="btn btn-outline-primary mb-3"
+        href="{% url 'accounts:customer_profile_update' %}">変更</a>{% endif %}
+    {% if user.is_shop %}<a class="btn btn-outline-primary mb-3"
+        href="{% url 'accounts:shop_profile_update' %}">変更</a>{% endif %}
+</table>
+
+{% endblock %}

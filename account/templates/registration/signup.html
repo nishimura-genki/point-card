@@ -1,0 +1,16 @@
+{% extends 'base_centered.html' %}
+
+{% load bootstrap4 %}
+
+{% block content %}
+
+{% comment %} <h5 class="card-title text-center">入会</h5>
+<form action="" method="POST">
+    {% bootstrap_form form layout='' %}
+    <button type="submit" class="btn btn-primary btn-block">入会</button>
+    {% csrf_token %}
+</form> {% endcomment %}
+<h5>入会</h5>
+<a class="btn btn-outline-primary mt-2" href="{% url 'accounts:shop_signup' %}">店舗の登録はこちら</a>
+<a class="btn btn-outline-primary mt-2" href="{% url 'accounts:customer_signup' %}">ユーザーの登録はこちら</a>
+{% endblock %}

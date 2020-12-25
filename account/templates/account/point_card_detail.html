@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<p>{{type}}</p>
+<table class="mx-auto">
+    <tbody>
+        <tr>
+            <th>
+                <h3>店舗名：</h3>
+            </th>
+            <td>
+                <h3>{{object.shop}}</h3>
+            </td>
+        </tr>
+        {% if object.has_point %}
+        <tr>
+            <th class="pt-3">
+                <h3>ポイント：</h3>
+            </th>
+            <td class="pt-3">
+                <h3>{{object.point}}</h3>
+            </td>
+        </tr>
+        {% endif %}
+        {% if object.has_stamp %}
+        <tr>
+            <th class="pt-3">
+                <h3>スタンプ数：</h3>
+            </th>
+            <td class="pt-3">
+                <h3>{{object.number_of_stamps}}</h3>
+            </td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+<a class="btn btn-outline-danger mt-4" href="{% url 'accounts:delete_point_card' object.pk %}">このポイントカードを消去</a>
+{% endblock body %}

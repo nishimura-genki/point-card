@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block body %}
+<p class="mb-5">ポイントを使用するかスタンプを利用するか選択してください</p>
+<form method='post'>
+    {% csrf_token %}
+    {{form}}
+    <button type='submit' class="btn btn-outline-primary mt-3">変更</button>
+</form>
+{% endblock %}
