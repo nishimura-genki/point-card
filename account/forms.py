@@ -96,7 +96,7 @@ class CustomizePointCardForm(forms.ModelForm):
 
     def clean_has_point(self):
         has_point = self.cleaned_data.get('has_point')
-        has_stamp = self.changed_data.get('has_stamp')
+        has_stamp = self.cleaned_data.get('has_stamp')
         if not has_point and not has_stamp:
             raise ValidationError(
                 self.error_messages['not_have_point_or_stamp'], code='not_have_point_or_stamp')
