@@ -6,3 +6,4 @@ gunicorn
 google-cloud-secret-manager
 google-auth
 django-storages[google]
+matplotlib
