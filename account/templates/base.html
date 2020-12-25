@@ -14,7 +14,7 @@
 
     <title>point_card</title>
 
-    <header style="height: 100px;" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <header style="height: 100px;" class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
         <div class="container-fluid">
             <div class="row">
                 <h1 class="navbar-brand col-md-3 col-lg-2 me-0 py-3">point card</h1>
@@ -28,11 +28,11 @@
 
 
 <body class="h-100">
-    <div class="container-fluid h-100">
+    <div class="container-fluid h-100" style="padding-top:100px;">
         <div class="row h-100">
             {% if user.is_shop %}
-            <nav class="col-2 bg-light sidebar_fixed">
-                <ul class="navbar-nav mt-5">
+            <div class="col-2 bg-light collapse d-flex" id="sidebar">
+                <ul class="nav flex-column flex-nowrap pt-5">
                     <li class="nav-item">
                         <a class='nav-link text-primary' href="{% url 'shop_top' %}">トップ</a>
                     </li>
@@ -44,10 +44,10 @@
                             href="{% url 'accounts:customize_point_card' %}">カード編集</a>
                     </li>
                 </ul>
-            </nav>
+            </div>
             {% endif %}
 
-            <main class="col-md-10 col-sm-12 mx-auto px-md-4">
+            <main class="col-md-10 mx-auto px-md-4">
                 {% if user.is_authenticated %}
                 <div class="text-center">
                     <div class="card-signin my-5">
@@ -71,7 +71,18 @@
         </div>
     </div>
 
-
+    {% if user.is_customer %}
+    <footer class="bg-dark text-white text-center fixed-bottom no-gutters" style="height: 75px;">
+        <div class="container-fluid">
+            <div class='row'>
+                <a class='col text-center' style="line-height: 75px;" href="{% url 'accounts:point_card_list' %}"">トップ</a>
+                    <a class='col text-center' style=" line-height: 75px;"
+                    href=" {% url 'accounts:qrcode' %}">QRコード</a>
+                <a class='col text-center' style="line-height: 75px;" href="{% url 'accounts:mypage' %}">マイページ</a>
+            </div>
+        </div>
+    </footer>
+    {% endif %}
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -85,16 +96,7 @@
 
 
 </body>
-{% if user.is_customer %}
-<footer class="bg-dark text-white text-center fixed-bottom no-gutters" style="height: 75px;">
-    <div class="container-fluid">
-        <div class='row'>
-            <a class='col text-center' style="line-height: 75px;" href="{% url 'accounts:point_card_list' %}"">トップ</a>
-                <a class='col text-center' style=" line-height: 75px;" href=" {% url 'accounts:qrcode' %}">QRコード</a>
-            <a class='col text-center' style="line-height: 75px;" href="{% url 'accounts:mypage' %}">マイページ</a>
-        </div>
-    </div>
-</footer>
-{% endif %}
+
+
 
 </html>
